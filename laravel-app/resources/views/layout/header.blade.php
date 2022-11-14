@@ -20,7 +20,7 @@
               <a class="nav-link" href="{{ route('pro') }}">Products</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="{{ route('posts') }}">Posts</a>
+              <a class="nav-link" href="/posts">Posts</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="contact">Contact</a>
