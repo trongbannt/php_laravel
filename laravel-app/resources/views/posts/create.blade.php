@@ -1,8 +1,10 @@
 @extends('layout.app')
 
 @section('content')
-    <h1>Add Post</h1>
-    <form action="/posts" method="POST" >
+    <div class="mt-3 mb-3">
+        <h1>Add Post</h1>
+    </div>
+    <form action="/posts" method="POST">
         @csrf
         <div class="form-group mb-3">
             <label for="title">Title</label>

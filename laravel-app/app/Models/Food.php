@@ -11,7 +11,7 @@ class Food extends Model
 
     protected $table = "foods";
     protected $primaryKey = "id";
-    // protected  $fillable =["title","body"];
+    protected  $fillable =["name","count", "description","image_path","category_id","created_at","updated_at"];
 
     public function category(){
         return $this->belongsTo(Category::class);

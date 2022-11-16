@@ -3,7 +3,7 @@
 @section('content')
     <h1>This is page index of PostsController</h1>
     <div>
-        <a href="/posts/create" type="button" class="btn btn-primary mb-3">Add Post</a>
+        <a href="/posts/create" type="button" id='addPost' class="btn btn-primary mb-3">Add Post</a>
         <table class="table table-hover">
             <thead>
                 <tr>
@@ -13,9 +13,13 @@
                 </tr>
             </thead>
             <tbody>
-                <?php $numRow = 0; ?>
+                @php
+                    $numRow = 0;
+                @endphp
                 @foreach ($posts as $item)
-                    <?php $numRow++; ?>
+                    @php
+                        $numRow++;
+                    @endphp
                     <tr>
                         <th scope="row">{{ $numRow }}</th>
                         <td>{{ $item->title }}</td>
@@ -24,9 +28,8 @@
                             <a href="/posts/{{ $item->id }}/edit" class="btn btn-primary">Edit</a>
                         </td>
                         <td>
-                            @php($idPost = $item->id)
-                            <button id="delete-post" type="button" class="btn btn-danger "
-                                data-idPost="{{ $item->id }}" data-toggle="modal" data-target="#exampleModal">
+                            <button  type="button" class="btn btn-danger delete_post" data-idPost="{{ $item->id }}"
+                                data-toggle="modal" data-target="#exampleModal">
                                 Delete
                             </button>
                         </td>
@@ -55,27 +58,26 @@
                         Are you sure you want to delete?
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="closeModal" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-primary">Delete</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
+   
 @endsection
 
 @section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
-        integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        $(document).ready(function() {
-            console.log('document ready');
-            $("#delete-post").click(function() {
-                console.log('.delete-post click');
-                let id = $(this).attr('data-idPost');
-                $('#id-post').val(id);
-            });
-        });
-    </script>
+ 
+<script>
+ $(document).ready(function() {
+     console.log('document ready');
+     $(".delete_post").click(function() {
+         console.log('.delete-post click');
+         let id = $(this).attr('data-idPost');
+         $('#id-post').val(id);
+     });
+ });
+</script>
 @endsection

@@ -16,15 +16,15 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->longText('description');
+            $table->longText('description')->nullable();
             $table->timestamps();
         });
 
         Schema::create('foods', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->integer('count');
-            $table->longText('description');
+            $table->string('name')->nullable();
+            $table->integer('count')->unsigned();
+            $table->longText('description')->nullable();
             $table->timestamps();
 
             //foreign keys

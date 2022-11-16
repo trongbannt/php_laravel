@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FoodsController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProductsController;
@@ -29,7 +30,7 @@ Route::get('/home', function () {
 Route::get("products", [
     ProductsController::class,
     "index" //index function of ProductsController
-])->name("pro");
+]);
 
 Route::get("products/{name}", [
     ProductsController::class,
@@ -49,6 +50,9 @@ Route::get("/about", [
 
 /*Posts */
 Route::resource('/posts', PostsController::class);
+
+/*Foods */
+Route::resource('/foods',FoodsController::class);
 
 // Route::get("/posts", [
 //     PostsController::class,
