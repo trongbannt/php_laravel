@@ -15,10 +15,6 @@
             <input type="text" class="form-control" disabled value="{{ $food->count }}" id="count" name="count">
         </div>
         <div class="form-group mb-3">
-            <label for="title">Count</label>
-            <input type="text" class="form-control" disabled value="{{ $food->count }}" id="count" name="count">
-        </div>
-        <div class="form-group mb-3">
             <label for="title">Category</label>
             <input type="text" class="form-control" disabled value="{{ $food->category->name }}" id="category" name="category">
         </div>

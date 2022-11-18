@@ -3,40 +3,45 @@
 @section('content')
     <h1>This is page index of PostsController</h1>
     <div>
-        <a href="/posts/create" type="button" id='addPost' class="btn btn-primary mb-3">Add Post</a>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Body</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    $numRow = 0;
-                @endphp
-                @foreach ($posts as $item)
-                    @php
-                        $numRow++;
-                    @endphp
+        <div class="table-responsive-md">
+            <a href="/posts/create" type="button" id='addPost' class="btn btn-primary mb-3">Add Post</a>
+            <table class="table table-hover">
+                <thead>
                     <tr>
-                        <th scope="row">{{ $numRow }}</th>
-                        <td>{{ $item->title }}</td>
-                        <td>{{ $item->body }}</td>
-                        <td>
-                            <a href="/posts/{{ $item->id }}/edit" class="btn btn-primary">Edit</a>
-                        </td>
-                        <td>
-                            <button  type="button" class="btn btn-danger delete_post" data-idPost="{{ $item->id }}"
-                                data-toggle="modal" data-target="#exampleModal">
-                                Delete
-                            </button>
-                        </td>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Body</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @php
+                        $numRow = 0;
+                    @endphp
+                    @foreach ($posts as $item)
+                        @php
+                            $numRow++;
+                        @endphp
+                        <tr>
+                            <th scope="row">{{ $numRow }}</th>
+                            <td>{{ $item->title }}</td>
+                            <td>{{ $item->body }}</td>
+                            <td>
+                                <a href="/posts/{{ $item->id }}/edit" class="btn btn-primary">Edit</a>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger delete_post" data-idPost="{{ $item->id }}"
+                                    data-toggle="modal" data-target="#exampleModal">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div>
+            {{ $posts->links() }}
+        </div>
     </div>
 
     <!-- Modal delete -->
@@ -65,19 +70,17 @@
             </div>
         </form>
     </div>
-   
 @endsection
 
 @section('script')
- 
-<script>
- $(document).ready(function() {
-     console.log('document ready');
-     $(".delete_post").click(function() {
-         console.log('.delete-post click');
-         let id = $(this).attr('data-idPost');
-         $('#id-post').val(id);
-     });
- });
-</script>
+    <script>
+        $(document).ready(function() {
+            console.log('document ready');
+            $(".delete_post").click(function() {
+                console.log('.delete-post click');
+                let id = $(this).attr('data-idPost');
+                $('#id-post').val(id);
+            });
+        });
+    </script>
 @endsection

@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
         DB::table('Posts')->delete();
-        \App\Models\Post::factory(5)->create();
+        \App\Models\Post::factory(50)->create();
 
         // $this->call('CategoriesTableSeeder');
         // $this->command->info('Categories table seeded');

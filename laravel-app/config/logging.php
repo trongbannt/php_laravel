@@ -117,6 +117,16 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        /**Custorm file log */
+        'log_app' => [
+            'driver' => 'daily',
+            //tap" => [App\Logging\CustomizeFormatter::class], //custorm format line write log
+            'path' => storage_path('logs/log-app.log'),
+            'level' => 'debug',
+            'days' => 0,
+        ],
+
     ],
 
 ];

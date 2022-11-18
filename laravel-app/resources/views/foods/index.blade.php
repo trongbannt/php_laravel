@@ -5,6 +5,9 @@
         <h1>This page foods</h1>
     </div>
     <div>
+        {{-- @if (session('error'))
+            <div class="alert alert-danger text-center">{{ session('error') }}</div>
+        @endif --}}
 
         @if (Session::has('message'))
             @php
@@ -51,10 +54,11 @@
                             <td>{{ $item->count }}</td>
                             <td>{{ $item->description }}</td>
                             <td>{{ $item->category->name }}</td>
-                            <td class="text-right" style="padding-right: 0"><a href="/foods/{{ $item->id }}/edit" class="btn btn-primary">Edit</a></td>
+                            <td class="text-right" style="padding-right: 0"><a href="/foods/{{ $item->id }}/edit"
+                                    class="btn btn-primary">Edit</a></td>
                             <td class="text-left">
-                                <a class="btn btn-danger delete_food " data-idFood="{{ $item->id }}" data-toggle="modal"
-                                    data-target="#exampleModal">
+                                <a class="btn btn-danger delete_food " data-idFood="{{ $item->id }}"
+                                    data-toggle="modal" data-target="#exampleModal">
                                     Delete
                                 </a>
                             </td>
@@ -62,6 +66,9 @@
                     @endforeach
                 </tbody>
             </table>
+        </div>
+        <div>
+            {{ $foods->links() }}
         </div>
     </div>
 
@@ -90,22 +97,6 @@
                 </div>
             </div>
         </form>
-    </div>
-
-    <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
-        <div class="toast" style="position: absolute; top: 0; right: 0;">
-            <div class="toast-header">
-                <img src="..." class="rounded mr-2" alt="...">
-                <strong class="mr-auto">Bootstrap</strong>
-                <small>11 mins ago</small>
-                <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="toast-body">
-                Hello, world! This is a toast message.
-            </div>
-        </div>
     </div>
 @endsection
 

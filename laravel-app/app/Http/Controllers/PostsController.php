@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Post;
 use Illuminate\Support\Facades\Redirect;
 use ReflectionFunctionAbstract;
+use Illuminate\Pagination\Paginator;
 
 class PostsController extends Controller
 {
@@ -20,7 +21,8 @@ class PostsController extends Controller
         // $posts = DB::table("posts")
         // ->get();
 
-        $posts = Post::all();
+        $posts = Post::Paginate(1);
+        Paginator::useBootstrapFive();
         //dd($posts); //dd = die dump
         // print_r($posts);
         return view('posts.index', ["posts" => $posts]);
