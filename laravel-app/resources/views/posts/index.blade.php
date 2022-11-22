@@ -47,7 +47,7 @@
     <!-- Modal delete -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <form action="{{ route('posts.destroy', 'id') }}" method="POST">
+        <form id="post-delete-form" action="{{ route('posts.destroy', 'id') }}" method="POST">
             @csrf
             @method('DELETE')
             <div class="modal-dialog" role="document">
@@ -76,7 +76,7 @@
     <script>
         $(document).ready(function() {
             console.log('document ready');
-            $(".delete_post").click(function() {
+            $(".delete_post").click(function(event) {
                 console.log('.delete-post click');
                 let id = $(this).attr('data-idPost');
                 $('#id-post').val(id);

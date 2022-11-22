@@ -9,25 +9,74 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
-                  
+
                     <li class="nav-item ">
-                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/products">Products <span
-                                class="sr-only">(current)</span></a>
+                        <a class="nav-link {{ request()->is('products') ? 'active' : '' }}" href="/products">Products
+                            <span class="sr-only">(current)</span></a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/posts">Posts</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/foods">Foods</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="contact">Contact</a>
-                    </li>
+                    @if (Auth::check())
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is('posts') ? 'active' : '' }}" href="/posts">Posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->is('foods') ? 'active' : '' }}" href="/foods">Foods</a>
+                        </li>
+                    @endif
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('about') ? 'active' : '' }}" href="about">
                             About
                         </a>
                     </li>
+
+                    @if (Auth::check())
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span>
+                                    <i class="bi bi-person-fill-gear" style="font-size: 1rem; color:#ffff"></i>
+                                    {{ Auth::user()->name }}
+                                </span>
+
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a>
+                                {{-- <a class="dropdown-item" href="{{ route('register') }}">Register</a> --}}
+                                <!-- logout -->
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <a class="dropdown-item" href="#"
+                                        onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
+                                        Logout
+                                    </a>
+                                </form>
+                                <!--end logout -->
+                            </div>
+                        </li>
+                        {{-- <li class="nav-item">
+                            <!-- logout -->
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <a class="nav-link" href="#"
+                                    onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">
+                                    Logout
+                                </a>
+                            </form>
+                            <!--end logout -->
+                        </li> --}}
+                    @else
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="bi bi-person-fill-gear" style="font-size: 1rem; color:#ffff"></i>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('login') }}">Login</a>
+                                <a class="dropdown-item" href="{{ route('register') }}">Register</a>
+                            </div>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>

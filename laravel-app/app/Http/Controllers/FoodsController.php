@@ -8,14 +8,13 @@ use App\Models\Category;
 use Illuminate\Pagination\Paginator;
 use Throwable;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Auth;
 
 class FoodsController extends Controller
 {
     public function index()
     {
         try {
-
             // Validate the value...
             $foods = Food::Paginate(2);
             Paginator::useBootstrapFive();

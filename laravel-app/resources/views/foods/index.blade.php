@@ -75,7 +75,7 @@
     <!-- Modal delete -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <form action="{{ route('foods.destroy', 'id') }}" method="POST">
+        <form id="delete-food-form" action="{{ route('foods.destroy', 'id') }}" method="POST">
             @csrf
             @method('DELETE')
             <div class="modal-dialog" role="document">
@@ -104,7 +104,7 @@
     <script>
         $(document).ready(function() {
             console.log('document ready');
-            $(".delete_food").click(function() {
+            $(".delete_food").click(function(event) {
                 console.log('.delete_food click');
                 let id = $(this).attr('data-idFood');
                 $('#id-food').val(id);

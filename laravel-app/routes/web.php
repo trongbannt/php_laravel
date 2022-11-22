@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\TestMiddlewareController;
+use App\Http\Controllers\ProfilesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,13 +20,11 @@ use App\Http\Controllers\PostsController;
 |
 */
 
+
 Route::get('/welcome', function () {
     return view('welcome');
 });
 
-Route::get('/home', function () {
-    return view('home');
-});
 
 /*Products pages*/
 Route::get("products", [
@@ -37,7 +37,7 @@ Route::get("products/{name}", [
     "detail"
 ])->where("name", "[a-zA-Z0-9]+");
 
-/*Pages */
+/*Pages home */
 Route::get("/", [
     PagesController::class,
     'index'
@@ -48,72 +48,28 @@ Route::get("/about", [
     'about'
 ]);
 
+Route::middleware(['role.test'])->group(function () {
+    Route::get('/test', [
+        TestMiddlewareController::class,
+        'index'
+    ]);
+});
+
 /*Posts */
-Route::resource('/posts', PostsController::class);
+Route::resource('/posts', PostsController::class)->middleware([
+    'auth', 
+    'verified'
+]);
 
 /*Foods */
-Route::resource('/foods',FoodsController::class);
-
-// Route::get("/posts", [
-//     PostsController::class,
-//     'index'
-// ])->name("posts");
-
-// Route::get("/posts/create_post",[
-//     PostsController::class,
-//     'createPost'
-// ])->name("create_post");
-
-
-/*Route::get('/products', [
-    ProductsController::class,
-    'index' //index function of ProductsController
-])->name('products');
-*/
-
-//how to validate "id only integer" ?
-//Regular Expression
-/*
-Route::get('/products/{productName}/{id}', [
-    ProductsController::class,
-    'detail' 
-])->where([
-    'productName' => '[a-zA-Z0-9\s]+',
-    'id' => '[0-9]+'
+Route::resource('/foods',FoodsController::class)->middleware([
+    'auth', 
+    'verified'
 ]);
-*/
-/*
-Route::get('/products/{productName}', [
-    ProductsController::class, 
-    'detail' 
-]);
- */
 
-/*
-Route::get('/products/about', [
-    ProductsController::class,
-    'about' 
-]);
-Route::get('/', function () {
-    return view('home'); //response a view
-    //return env('MY_NAME');
+Route::middleware('auth')->group(function(){
+    Route::get('/profile',[ProfilesController::class,'edit'])->name('profile.edit');
 });
-Route::get('/users', function () {
-    return 'This is the users page';//response a string
-});
-//response an array 
-Route::get('/foods', function () {
-    return ['sushi', 'sashimi', 'tofu'];
-});
-//response an object
-Route::get('/aboutMe', function () {
-    return response()->json([
-        'name' => 'Nguyen Duc Hoang',
-        'email' => 'sunlight4d@gmail.com'
-    ]); //response
-});
-//response another request = redirect
-Route::get('/something', function () {
-    return redirect('/foods');//redirect to foods
-});
-*/
+
+
+require __DIR__.'/auth.php';
