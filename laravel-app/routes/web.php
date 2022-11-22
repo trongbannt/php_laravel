@@ -69,6 +69,8 @@ Route::resource('/foods',FoodsController::class)->middleware([
 
 Route::middleware('auth')->group(function(){
     Route::get('/profile',[ProfilesController::class,'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfilesController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfilesController::class, 'destroy'])->name('profile.destroy');
 });
 
 

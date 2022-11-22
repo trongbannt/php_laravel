@@ -40,7 +40,6 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a>
-                                {{-- <a class="dropdown-item" href="{{ route('register') }}">Register</a> --}}
                                 <!-- logout -->
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST">
                                     @csrf
@@ -53,18 +52,6 @@
                                 <!--end logout -->
                             </div>
                         </li>
-                        {{-- <li class="nav-item">
-                            <!-- logout -->
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST">
-                                @csrf
-                                <a class="nav-link" href="#"
-                                    onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                                    Logout
-                                </a>
-                            </form>
-                            <!--end logout -->
-                        </li> --}}
                     @else
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
