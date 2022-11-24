@@ -6,10 +6,13 @@ use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Throwable;
+use Illuminate\Support\Facades\Log;
 
 class ProfilesController extends Controller
 {
-    public function edit(Request $request){
+    public function edit(Request $request)
+    {
         return view('profile.edit', [
             'user' => $request->user(),
         ]);;
@@ -17,14 +20,39 @@ class ProfilesController extends Controller
 
     public function update(ProfileUpdateRequest $request)
     {
-        $request->user()->fill($request->validated());
+        try {
+            $request->user()->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+            if ($request->user()->isDirty('email')) {
+                $request->user()->email_verified_at = null;
+            }
+
+            $request->user()->save();
+
+            return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        } catch (Throwable $exception) {
+            Log::channel('log_app')->error($exception->getMessage());
+            throw $exception;
         }
+    }
 
-        $request->user()->save();
+    public function destroy(Request $request)
+    {
+        try {
+            $request->validateWithBag('userDeletion', [
+                'password' => ['required', 'current_password']
+            ]);
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+            $user = $request->user();
+            Auth::logout();
+            $user->delete();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return Redirect::to('/');
+        } catch (Throwable $exception) {
+            Log::channel('log_app')->error($exception->getMessage());
+            throw $exception;
+        }
     }
 }

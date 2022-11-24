@@ -25,21 +25,12 @@
                 <div class="text-danger">{{ $message }}</div>
             @enderror
         </div>
-        <div class="mt-3">
+        <div class="mt-3 d-flex">
             <button type="submit" class="btn btn-secondary">Save</button>
-            @if (session('status')==='profile-updated')
-                <p class="text-success flex" id="status_upate_profile">Saved success</p>
+            @if (session('status') === 'profile-updated')
+                <span class="text-success align-self-center pl-3" id="status_upate_profile">Saved success</span>
             @endif
         </div>
     </form>
 </section>
 
-@section('script')
-    <script>
-        $(document).ready(function() {
-            setTimeout(function() {
-                $('#status_upate_profile').hide();
-            }, 2000);
-        });
-    </script>
-@endsection
