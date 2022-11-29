@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Food;
 use App\Models\Category;
-use Illuminate\Pagination\Paginator;
+
 use Throwable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +17,7 @@ class FoodsController extends Controller
         try {
             // Validate the value...
             $foods = Food::Paginate(2);
-            Paginator::useBootstrapFive();
+          
             //$num = 5 / 0;
             return view('foods.index', ['foods' => $foods]);
         } catch (Throwable $exception) {

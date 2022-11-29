@@ -8,14 +8,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Throwable;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class ProfilesController extends Controller
 {
     public function edit(Request $request)
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);;
+        return Inertia::render('Profile/Edit');
+
+        // return view('profile.edit', [
+        //     'user' => $request->user(),
+        // ]);;
     }
 
     public function update(ProfileUpdateRequest $request)

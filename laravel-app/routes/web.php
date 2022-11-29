@@ -9,6 +9,9 @@ use App\Http\Controllers\PostsController;
 use App\Http\Controllers\TestMiddlewareController;
 use App\Http\Controllers\ProfilesController;
 
+use Illuminate\Foundation\Application;
+use Inertia\Inertia;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -21,39 +24,32 @@ use App\Http\Controllers\ProfilesController;
 */
 
 
-Route::get('/welcome', function () {
-    return view('welcome');
-});
+// Route::get('/welcome', function () {
+//     return view('welcome');
+// });
 
 
-/*Products pages*/
-Route::get("products", [
-    ProductsController::class,
-    "index" //index function of ProductsController
-]);
+// /*Products pages*/
+// Route::get("products", [
+//     ProductsController::class,
+//     "index" //index function of ProductsController
+// ]);
 
-Route::get("products/{name}", [
-    ProductsController::class,
-    "detail"
-])->where("name", "[a-zA-Z0-9]+");
+// Route::get("products/{name}", [
+//     ProductsController::class,
+//     "detail"
+// ])->where("name", "[a-zA-Z0-9]+");
 
-/*Pages home */
-Route::get("/", [
-    PagesController::class,
-    'index'
-]);
+// /*Pages home */
+// Route::get("/", [
+//     PagesController::class,
+//     'index'
+// ]);
 
-Route::get("/about", [
-    PagesController::class,
-    'about'
-]);
-
-Route::middleware(['role.test'])->group(function () {
-    Route::get('/test', [
-        TestMiddlewareController::class,
-        'index'
-    ]);
-});
+// Route::get("/about", [
+//     PagesController::class,
+//     'about'
+// ]);
 
 /*Posts */
 Route::resource('/posts', PostsController::class)->middleware([
@@ -73,5 +69,13 @@ Route::middleware('auth')->group(function(){
     Route::delete('/profile', [ProfilesController::class, 'destroy'])->name('profile.destroy');
 });
 
+// /**FE use vuejs */
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::get('/', function () {
+    return Inertia::render('Index');
+})->name('home');
 
 require __DIR__.'/auth.php';

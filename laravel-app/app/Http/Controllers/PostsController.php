@@ -21,9 +21,7 @@ class PostsController extends Controller
         // $posts = DB::table("posts")
         // ->get();
 
-        $posts = Post::Paginate(1);
-        Paginator::useBootstrapFive();
-        //dd($posts); //dd = die dump
+        $posts = Post::Paginate(10);
         // print_r($posts);
         return view('posts.index', ["posts" => $posts]);
     }

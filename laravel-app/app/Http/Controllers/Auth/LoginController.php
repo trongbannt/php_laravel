@@ -9,12 +9,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Throwable;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
 
 class LoginController extends Controller
 {
     public function index()
     {
-        return view('auth.login');
+        /**Display the login view */
+        return Inertia::render('Auth/Login');
+        // return view('auth.login');
     }
 
     /**
@@ -26,7 +29,7 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         try {
-            //dd($request);
+           // dd($request);
             $remember = false;
             if($request->has('remember')){
                 $remember = true;

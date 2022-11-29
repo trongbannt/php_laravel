@@ -13,6 +13,8 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use App\Models\User;
+use Illuminate\Validation\Rules\Password;
+use Inertia\Inertia;
 
 class RegisteredUserController extends Controller
 {
@@ -23,7 +25,8 @@ class RegisteredUserController extends Controller
      */
     public function create()
     {
-        return view('auth.register');
+        // return view('auth.register');
+        return Inertia::render('Auth/Register');
     }
 
     /**
@@ -37,10 +40,11 @@ class RegisteredUserController extends Controller
     public function store(Request $request )
     {
         try{
+            
             $request->validate([
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-                'password' => ['required', 'confirmed', Rules\Password::defaults()],
+                'password' => ['required', 'confirmed',Password::default()],
             ]);
     
             $user = User::create([

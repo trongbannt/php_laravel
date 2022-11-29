@@ -88,10 +88,7 @@
                             </div>
                             <div class="mb-3">
                                 <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required
-                                    class="form-control @error('password_confirmation') is-invalid @enderror" placeholder="Confirm Password">
-                                @error('password_confirmation')
-                                    <div class="text-danger">{{ $message }}</div>
-                                @enderror
+                                    class="form-control"  placeholder="Confirm Password">
                             </div>
                             <div class="text-center"><button type="submit"
                                     class="btn btn-color px-5 mb-5 w-100">Register</button></div>
