@@ -1,0 +1,82 @@
+Em gửi
+Report date:  2022/11/30
+
+Công việc trong ngày:
+Laravel + vuejs:
+build function profile accout
+- update info user(doing)
+- update password(done)
+- delete accout(done)
+
+Công việc ngày tiếp theo: 
+Laravel + vuejs: 
+build function profile accout
+- update info user
+- use vuejs build CRUD(Example: screen food)
++ Show data 
++ create item
++ update item
++ Delete item
++ paging
+
+Issue: 
+config include boostrap 
+
+
+
+-------------------------------------------
+
+setup mix lavarel with vuejs use inertai
+
+
+composer require laravel/ui
+php artisan ui bootstrap --auth
+
+https://techvblogs.com/blog/how-to-install-bootstrap-5-in-laravel-9-with-vite
+
+(https://inertiajs.com/server-side-setup)
+composer require inertiajs/inertia-laravel
+php artisan inertia:middleware
+npm install
+npm i @vitejs/plugin-vue
+npm i ziggy-js
+npm i tailwindcss
+npm i @tailwindcss/forms
+
+npm install --save bootstrap bootstrap-icons
+
+----------------------------------------------
+
+
+Laravel PHP
+Code
+
+https://github.com/sunlight3d/YoutubeChannel/tree/master/Complete%20Laravel%20Tutorial%202022
+
+Example
+https://github.com/ozdemirburak/laravel-9-simple-cms#step1
+
+https://github.com/Md-shefat-masum/Laravel-Ecommerce
+
+https://viblo.asia/s/hanh-trinh-chinh-phuc-laravel-framework-nB5pXJDG5PG
+
+
+composer require laravel/breeze --dev
+
+
+bannt@rikkeisoft.com
+12345678
+
+user001@gmail.com
+user002@gmail.com
+
+
+ 'auth' => \App\Http\Middleware\Authenticate::class,
+ 'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+ 
+ 
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+ 
+ 
+ 12345678
+ 123456abc
