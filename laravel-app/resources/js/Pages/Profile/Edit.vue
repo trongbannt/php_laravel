@@ -3,6 +3,7 @@ import MainLayout from '@/Layouts/Layout.vue';
 import { Head, usePage } from '@inertiajs/inertia-vue3';
 import { ref } from 'vue';
 import DeleteUserFormVue from './Partials/DeleteUserForm.vue';
+import DeleteUserFormVue2 from './Partials/DeleteUserForm2.vue';
 
 
 
@@ -21,7 +22,7 @@ import DeleteUserFormVue from './Partials/DeleteUserForm.vue';
 
                 <div class="p-4 sm:p-8 bg-white shadow rounded-lg mt-4 mb-4">
                     <div class="col-sm-6">
-                        <!-- @include('profile.partials.update-password-form') -->
+                        <DeleteUserFormVue2></DeleteUserFormVue2>
 
                     </div>
                 </div>

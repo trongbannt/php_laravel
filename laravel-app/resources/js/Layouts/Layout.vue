@@ -24,7 +24,7 @@ import { Link } from '@inertiajs/inertia-vue3';
                             <a class="nav-link "  href="/posts">Posts</a>
                         </li>
                         <li class="nav-item" v-if="$page.props.auth.user">
-                            <a class="nav-link " href="/foods">Foods</a>
+                            <a class="nav-link  " href="/foods">Foods</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="about">
@@ -36,7 +36,7 @@ import { Link } from '@inertiajs/inertia-vue3';
                             <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span>
-                                    <i class="bi bi-person-fill-gear" style="font-size: 1rem; color:#ffff"></i>
+                                    <i class="bi bi-person-fill-gear" style="font-size: 0.75rem; color:#ffff"></i>
                                     <!-- Show user name  -->
                                     {{ $page.props.auth.user.name }}        
                                 </span>
@@ -51,9 +51,9 @@ import { Link } from '@inertiajs/inertia-vue3';
                         </li>
                         <!-- not yet login -->
                         <li class="nav-item dropdown" v-if="!$page.props.auth.user">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bi bi-person-fill-gear" style="font-size: 1rem; color:#ffff"></i>
+                                <i class="bi bi-person-fill-gear" style="font-size: 0.75rem; color:#ffff"></i>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <Link class="dropdown-item" :href="route('login')">Login</Link>
@@ -79,3 +79,8 @@ import { Link } from '@inertiajs/inertia-vue3';
         </div>
     </footer>
 </template>
+<style>
+.nav-link{
+    margin-top: 0.15rem !important;
+}
+</style>

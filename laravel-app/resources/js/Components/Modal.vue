@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, watch } from 'vue';
+import { onMounted, onUnmounted, watch,onUpdated} from 'vue';
 
 const props = defineProps({
     show: {
@@ -10,6 +10,10 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+
+    modalId:{
+        type:String
+    }
 });
 
 const emit = defineEmits(['close']);
@@ -19,6 +23,7 @@ watch(
     () => {
         if (props.show) {
             document.body.style.overflow = 'hidden';
+
         } else {
             document.body.style.overflow = null;
         }
@@ -27,6 +32,7 @@ watch(
 
 const close = () => {
     if (props.closeable) {
+        props.show =  false;
         emit('close');
     }
 };
@@ -37,26 +43,31 @@ const closeOnEscape = (e) => {
     }
 };
 
+
+
 onMounted(() => document.addEventListener('keydown', closeOnEscape));
+
 
 onUnmounted(() => {
     document.removeEventListener('keydown', closeOnEscape);
     document.body.style.overflow = null;
+    
 });
 
 
 </script>
 
 <template>
-    <teleport to="body">
-        <div v-show="show" class="modal fade" id="exampleModal" data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+    <teleport to="body" >
+        <section v-if=show id="modal-section">
+        <div class="modal fade" :id="modalId"  data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">
                             <slot name="header" />
                         </h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -69,5 +80,6 @@ onUnmounted(() => {
                 </div>
             </div>
         </div>
+    </section>
     </teleport>
 </template>
