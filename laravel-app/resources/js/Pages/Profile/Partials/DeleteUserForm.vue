@@ -15,6 +15,8 @@ const form = useForm({
 const closeModal = () => {
     confirmingUserDeletion.value = false;
     form.reset();
+    const collection = document.getElementsByClassName("modal-backdrop fade show");
+    collection[0].remove();
 }
 
 
@@ -24,14 +26,12 @@ const confirmUserDeletion = () => {
 }
 
 const deleteAccount = () => {
-    confirmingUserDeletion.value = false;
-
-    // form.delete(route('profile.destroy'), {
-    //     preserveScroll: true,
-    //     onSuccess: () => closeModal(),
-    //     onError: () => passwordInput.value.focus(),
-    //     onFinish: () => form.reset(),
-    // });
+    form.delete(route('profile.destroy'), {
+        preserveScroll: true,
+        onSuccess: ()=> closeModal(),
+        onError: () => passwordInput.value.focus(),
+        onFinish: () => form.reset(),
+    });
 }
 
 
@@ -73,7 +73,8 @@ const deleteAccount = () => {
                 <div>
                     <button type="button" class="btn btn-light mr-2" @click="closeModal"
                         data-dismiss="modal">CANCEL</button>
-                    <button type="submit" class="btn btn-danger" @click="deleteAccount">DELETE
+                    <button type="submit" class="btn btn-danger"  :disabled="form.processing"
+                        @click="deleteAccount">DELETE
                         ACCOUNT</button>
                 </div>
             </template>

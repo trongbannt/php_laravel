@@ -60,7 +60,7 @@ onUnmounted(() => {
 <template>
     <teleport to="body" >
         <section v-if=show id="modal-section">
-        <div class="modal fade" :id="modalId"  data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal fade" :id="modalId"  tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
