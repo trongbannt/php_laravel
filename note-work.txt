@@ -1,17 +1,16 @@
 Em gửi
-Report date:  2022/11/30
+Report date:  2022/12/01
 
 Công việc trong ngày:
 Laravel + vuejs:
 build function profile accout
-- update info user(doing)
+- update info user(done)
 - update password(done)
 - delete accout(done)
 
 Công việc ngày tiếp theo: 
 Laravel + vuejs: 
 build function profile accout
-- update info user
 - use vuejs build CRUD(Example: screen food)
 + Show data 
 + create item
@@ -27,7 +26,8 @@ config include boostrap
 -------------------------------------------
 
 setup mix lavarel with vuejs use inertai
-
+Đọc thêm để sử dụng inertia.js
+https://inertiajs.com/forms
 
 composer require laravel/ui
 php artisan ui bootstrap --auth
@@ -44,6 +44,8 @@ npm i tailwindcss
 npm i @tailwindcss/forms
 
 npm install --save bootstrap bootstrap-icons
+
+
 
 ----------------------------------------------
 
