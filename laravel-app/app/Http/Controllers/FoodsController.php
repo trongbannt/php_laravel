@@ -9,6 +9,8 @@ use App\Models\Category;
 use Throwable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use App\ViewModel\FoodViewModel;
 
 class FoodsController extends Controller
 {
@@ -16,10 +18,16 @@ class FoodsController extends Controller
     {
         try {
             // Validate the value...
-            $foods = Food::Paginate(2);
-          
-            //$num = 5 / 0;
-            return view('foods.index', ['foods' => $foods]);
+           
+            $foodsPaging = Food::Paginate(2);
+           
+           foreach($foodsPaging as $item){
+            $item->category->name;
+        }
+        
+        // dd($foods,$foodsPaging);
+        return Inertia::render('Food/ListFood',['foods' => $foodsPaging]);
+        //return view('foods.index', ['foods' => $foodsPaging]);
         } catch (Throwable $exception) {
 
             // dd($exception);

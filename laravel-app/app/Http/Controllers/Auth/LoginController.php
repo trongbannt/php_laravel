@@ -29,7 +29,7 @@ class LoginController extends Controller
     public function authenticate(Request $request)
     {
         try {
-           // dd($request);
+           
             $remember = false;
             if($request->has('remember')){
                 $remember = true;

@@ -24,7 +24,7 @@ import { Link } from '@inertiajs/inertia-vue3';
                             <a class="nav-link "  href="/posts">Posts</a>
                         </li>
                         <li class="nav-item" v-if="$page.props.auth.user">
-                            <a class="nav-link  " href="/foods">Foods</a>
+                            <Link class="nav-link" :href="route('foods.index')">Foods</Link>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="about">
