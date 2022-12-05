@@ -11,23 +11,40 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use App\ViewModel\FoodViewModel;
+use Illuminate\Pagination\Paginator;
+use Ramsey\Uuid\Type\Integer;
 
 class FoodsController extends Controller
 {
-    public function index()
+    public int $pageSize = 10;
+
+    public function index(Request $request)
     {
         try {
-            // Validate the value...
-           
-            $foodsPaging = Food::Paginate(2);
-           
-           foreach($foodsPaging as $item){
-            $item->category->name;
-        }
-        
-        // dd($foods,$foodsPaging);
-        return Inertia::render('Food/ListFood',['foods' => $foodsPaging]);
-        //return view('foods.index', ['foods' => $foodsPaging]);
+
+            $currentPage = 1;
+            if ($request->has('page')) {
+                // You can set this to any page you want to paginate to
+                $currentPage = $request->query('page');
+                //dd($request);
+            }
+
+            // Make sure that you call the static method currentPageResolver()
+            // before querying users
+            Paginator::currentPageResolver(function () use ($currentPage) {
+                return $currentPage;
+            });
+
+            $foodsPaging = Food::Paginate($this->pageSize);
+
+            foreach ($foodsPaging as $item) {
+                $item->category->name;
+            }
+
+            return Inertia::render('Food/ListFood', ['foods' => $foodsPaging]);
+            //return view('foods.index', ['foods' => $foodsPaging]);
+            //return response()->json(['foods' => $foodsPaging]);
+
         } catch (Throwable $exception) {
 
             // dd($exception);
@@ -72,7 +89,7 @@ class FoodsController extends Controller
                 'updated_at' => now(),
             ]);
 
-            Log::channel('log_app')->info('CREATED', ['Food'=>$foodAdd]);
+            Log::channel('log_app')->info('CREATED', ['Food' => $foodAdd]);
             //save data to database
             $foodAdd->save();
 
@@ -94,7 +111,8 @@ class FoodsController extends Controller
             $foodEdit = Food::find($id);
             $categories = $this->getCategories();
 
-            return view('foods.edit', ['categories' => $categories, 'food' => $foodEdit]);
+            return Inertia::render('Food/EditFood',['categories' => $categories, 'food' => $foodEdit]);
+            //return view('foods.edit', ['categories' => $categories, 'food' => $foodEdit]);
         } catch (Throwable $exception) {
 
             Log::channel('log_app')->error($exception->getMessage());
@@ -154,7 +172,7 @@ class FoodsController extends Controller
                     'updated_at' => now(),
                 ]);
 
-            Log::channel('log_app')->info('UPDATED', ['Food'=>[
+            Log::channel('log_app')->info('UPDATED', ['Food' => [
                 'id' => $id,
                 'name' => $request->input('name'),
                 'count' => $request->input('count'),
@@ -177,11 +195,11 @@ class FoodsController extends Controller
         }
     }
 
-    
-    public function destroy(Request $request)
+
+    public function destroy(Request $request, $id)
     {
         try {
-            $id = $request->id;
+            //dd($request,$id);
             $foodDelete = Food::find($id);
             if (is_null($foodDelete)) {
                 $response  = array(
@@ -193,7 +211,7 @@ class FoodsController extends Controller
             }
 
             $foodDelete->delete();
-            Log::channel('log_app')->info('DELETED',['Food'=>$foodDelete]);
+            Log::channel('log_app')->info('DELETED', ['Food' => $foodDelete]);
             $response = array(
                 "message" => "Delete food success!",
                 'type' => "success",
@@ -210,7 +228,9 @@ class FoodsController extends Controller
     {
         try {
             $food = Food::find($id);
-            return view('foods.detail')->with('food', $food);
+            $food->category->name;
+            return Inertia::render('Food/ShowFood', ['food' => $food]);
+            // return view('foods.detail')->with('food', $food);
         } catch (Throwable $exception) {
 
             Log::channel('log_app')->error($exception->getMessage());

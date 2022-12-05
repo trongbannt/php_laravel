@@ -36,12 +36,20 @@ https://techvblogs.com/blog/how-to-install-bootstrap-5-in-laravel-9-with-vite
 
 (https://inertiajs.com/server-side-setup)
 composer require inertiajs/inertia-laravel
+
+Ref: huong dan cach su dung ziggy-js sinh ra route
+https://codebrisk.com/blog/ziggy-use-your-laravel-routes-in-vue-js
+
+https://www.npmjs.com/package/ziggy-js
+
+------------------------------------------------
 php artisan inertia:middleware
 npm install
 npm i @vitejs/plugin-vue
 npm i ziggy-js
 npm i tailwindcss
 npm i @tailwindcss/forms
+npm i @inertiajs/inertia
 
 npm install --save bootstrap bootstrap-icons
 
