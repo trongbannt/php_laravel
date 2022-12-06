@@ -1,30 +1,66 @@
 <script setup>
 import MainLayout from '@/Layouts/Layout.vue';
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
-import { onMounted } from 'vue';
+import { Head, Link, useForm, progress, usePage } from '@inertiajs/inertia-vue3';
+import { ref, onMounted } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
+import TextInput from '@/Components/TextInput.vue';
+import InputError from '@/Components/InputError.vue';
+import InputLable from '@/Components/InputLabel.vue';
 
-defineProps({
+const notification = ref(false);
+const props = defineProps({
     food: {},
-    categories: []
+    categories: [],
+    errors: {},
 });
 
 const form = useForm({
-    name: '',
-    image_path: '',
-    count: '',
-    category_id: '',
-    description: ''
-
+    name: props.food.name,
+    image: null,
+    image_path: props.food.image_path,
+    count: props.food.count,
+    category_id: props.food.category_id,
+    description: props.food.description,
 });
 
+// onMounted(() => {
+//     console.log($page.props.flash);
+//     // if (usePage().props.flash.message) {
+//     //     notification.value = true;
+//     //     setTimeout(function () {
+//     //         notification.value = false;
+//     //     }, 3000);
+//     // }
+// });
+
 const updateFood = () => {
-    console.log(this.food);
+    const url = route('foods.update', { 'id': props.food.id });
+    Inertia.post(url, {
+        _method: 'put',
+        forceFormData: true,
+        image: form.image,
+        name: form.name,
+        count: form.count,
+        image_path: form.image_path,
+        category_id: form.category_id,
+        description: form.description,
+        onSuccess: page => {
+
+        },
+        onError: e => { console.log(e); },
+        onFinish: () => {
+            console.log('onFinish');
+            form.reset();
+        },
+    })
 }
 
-onMounted(()=>{
-   console.log(this.food);
-})
+const updateImage = (e) => {
+    const showImage = document.getElementById('show_image');
+    const nameImage = document.getElementById('name_image');
+    showImage.setAttribute('src', window.URL.createObjectURL(e.target.files[0]));
+    nameImage.innerHTML = e.target.files[0].name;
+}
 
 </script>
 <template>
@@ -35,17 +71,69 @@ onMounted(()=>{
             <div class="mt-3 mb-3">
                 <h1>Modify item food</h1>
             </div>
-            {{ food }}
+
+            <div v-if="$page.props.flash.message" class="alert alert-danger" role="alert">
+                {{ $page.props.flash.message }}
+            </div>
+
             <form @submit.prevent="updateFood">
+                <div class="form-group mb-3">
+                    <InputLable>Name</InputLable>
+                    <TextInput type="text" v-model="form.name" autofocus placeholder="Enter food's name"></TextInput>
+                    <InputError v-if="errors.name" :message="errors.name">
+                    </InputError>
+                </div>
+
+                <!--image-->
+                <div class="form-group mb-3">
+                    <img :src="'/images/' + food.image_path" id="show_image" class="img-thumbnail" width="200"
+                        height="200">
+                    <input type="text" class="form-control" hidden :value="food.image_path" id="image_path"
+                        name="image_path">
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Change image</span>
+                    </div>
+                    <div class="custom-file">
+                        <label for="input_file_image" id="name_image" class="name-image-food">Choose file</label>
+                        <input type="file" id="input_file_image" class="custom-file-input" name="image"
+                            @input="form.image = $event.target.files[0]" @change="updateImage"
+                            accept="image/png, image/jpg, image/jpeg">
+                    </div>
+                </div>
+                <InputError v-if="errors.image" :message="errors.image"></InputError>
+
 
                 <div class="form-group mb-3">
-                    <label for="title">Name</label>
-                    <input type="text" class="form-control"  v-model="food.name" id="name" name="name"
-                        placeholder="Enter food's name">
+                    <InputLable>Count</InputLable>
+                    <TextInput type="text" v-model="form.count" placeholder="Enter food's count"></TextInput>
+                    <InputError v-if="errors.count" :message="errors.count"></InputError>
                 </div>
-             
-                <button type="submit" class="btn btn-primary mb-3 mr-1" value="">Save</button>
+
+                <div class="form-group mb-3">
+                    <label for="category_id">Category</label>
+                    <select class="custom-select" v-model="form.category_id">
+                        <option value="">--Choose a categories--</option>
+                        <option v-for="category in categories" :value="category.id">
+                            {{ category.name }}
+                        </option>
+                    </select>
+                    <InputError v-if="errors.category_id" :message="errors.category_id"></InputError>
+                </div>
+
+                <div class="form-group mb-3">
+                    <InputLable>Description</InputLable>
+                    <textarea class="form-control" id="description" name="description" rows="3"
+                        placeholder="Enter food's description" v-model="form.description"></textarea>
+                </div>
+
+                <button type="submit" :disabled="form.processing" class="btn btn-primary mb-3 mr-1"
+                    value="">Save</button>
                 <Link :href="route('foods.index')" class="btn btn-secondary mb-3" value="">Back</Link>
+                <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+                    {{ form.progress.percentage }}%
+                </progress>
             </form>
         </div>
     </MainLayout>
@@ -71,5 +159,9 @@ onMounted(()=>{
 .input-group>.custom-file:not(:first-child) .name-image-food {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+}
+
+.custom-file-input {
+    width: 0% !important;
 }
 </style>

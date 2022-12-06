@@ -5,14 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Food;
 use App\Models\Category;
-
 use Throwable;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\ViewModel\FoodViewModel;
 use Illuminate\Pagination\Paginator;
-use Ramsey\Uuid\Type\Integer;
 
 class FoodsController extends Controller
 {
@@ -62,6 +58,7 @@ class FoodsController extends Controller
     public function store(Request $request)
     {
         try {
+            dd($request);
             // validate data request
             $request->validate([
                 "name" => "required|unique:foods|max:255",
@@ -123,16 +120,13 @@ class FoodsController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            if (!isset($id)) {
-                $response = array(
-                    "message" => "Modify food don't success!",
-                    'type' => "error",
-                );
-                return Redirect('/foods')->with($response);
-            }
-
+           
+            return back()->with("message" ,"Modify food don't success!");
             $image_path = "";
             $food = Food::find($id);
+            if(!$food)
+                return back()->with("message" ,"Modify food don't success!");
+
             if ($request->hasFile('image')) {
                 // validate data request if has file image
                 $request->validate([
@@ -140,13 +134,13 @@ class FoodsController extends Controller
                     "count" => "required|integer|min:0|max:1000",
                     "category_id" => "required",
                     //Validate image
-                    'image' => 'required|mimes:jpg,png,jpeg|max:5048'
+                    'image' => 'required|mimes:jpg,png,jpeg|max:100'
                 ]);
 
                 //client image's name and server's image name
                 //must be different, why ??
                 $ext =  $request->image->extension();
-                $generatedImageName = 'image' . '-' . time() . '.' . $ext;
+                $generatedImageName = 'image' . '-' .date('Ymd').'-'. time() . '.' . $ext;
 
                 //move to a folder
                 $request->image->move(public_path('images'), $generatedImageName);
@@ -159,25 +153,25 @@ class FoodsController extends Controller
                     "category_id" => "required",
                 ]);
 
-                $image_path  = $request->input('image_path');
+                $image_path  = $request->image_path;
             }
 
             Food::where('id', $id)
                 ->update([
-                    'name' => $request->input('name'),
-                    'count' => $request->input('count'),
-                    'category_id' => $request->input('category_id'),
-                    'description' => $request->input('description'),
+                    'name' => $request->name,
+                    'count' => $request->count,
+                    'category_id' => $request->category_id,
+                    'description' => $request->description,
                     'image_path' => $image_path,
                     'updated_at' => now(),
                 ]);
 
             Log::channel('log_app')->info('UPDATED', ['Food' => [
                 'id' => $id,
-                'name' => $request->input('name'),
-                'count' => $request->input('count'),
-                'category_id' => $request->input('category_id'),
-                'description' => $request->input('description'),
+                'name' => $request->name,
+                'count' => $request->count,
+                'category_id' => $request->category_id,
+                'description' => $request->description,
                 'image_path' => $image_path,
                 'updated_at' => now(),
             ]]);
@@ -194,7 +188,6 @@ class FoodsController extends Controller
             throw $exception;
         }
     }
-
 
     public function destroy(Request $request, $id)
     {
