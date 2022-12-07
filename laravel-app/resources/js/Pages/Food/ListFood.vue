@@ -11,8 +11,10 @@ const confirmingUserDeletion = ref(false);
 const foodDelete = ref(null);
 const filter = ref(null);
 
-const props = defineProps({
-    foods: Array,
+defineProps({
+    foods: {},
+    prev:null, // fix warning
+    next:null // fix warning
 });
 
 onMounted(() => {

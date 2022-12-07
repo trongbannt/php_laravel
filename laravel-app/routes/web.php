@@ -23,7 +23,8 @@ use Inertia\Inertia;
 Route::get("/about", [
     PagesController::class,
     'about'
-]);
+])->name('about');
+
 
 /*Posts */
 Route::resource('/posts', PostsController::class)->middleware([

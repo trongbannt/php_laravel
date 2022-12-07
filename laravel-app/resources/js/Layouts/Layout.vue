@@ -29,9 +29,7 @@ import { Link } from '@inertiajs/inertia-vue3';
                             <Link class="nav-link" :href="route('foods.index')">Foods</Link>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="about">
-                                About
-                            </a>
+                            <Link class="nav-link" :href="route('about')"> About</Link>
                         </li>
 
                         <li class="nav-item dropdown" v-if="$page.props.auth.user">
