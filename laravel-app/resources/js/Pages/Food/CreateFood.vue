@@ -1,8 +1,7 @@
 <script setup>
 import MainLayout from '@/Layouts/Layout.vue';
-import { Head, Link, useForm, usePage } from '@inertiajs/inertia-vue3';
-import { ref, onUpdated,onBeforeMount } from 'vue';
-import { Inertia } from '@inertiajs/inertia';
+import { Head, Link, useForm, progress, usePage } from '@inertiajs/inertia-vue3';
+import { ref, onUpdated } from 'vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLable from '@/Components/InputLabel.vue';
@@ -10,18 +9,15 @@ import InputLable from '@/Components/InputLabel.vue';
 const notification = ref(false);
 
 const props = defineProps({
-    food: {},
     categories: [],
-    errors: {},
 });
 
 const form = useForm({
-    name: props.food.name,
+    name: '',
     image: null,
-    image_path: props.food.image_path,
-    count: props.food.count,
-    category_id: props.food.category_id,
-    description: props.food.description,
+    count: null,
+    category_id: null,
+    description: '',
 });
 
 onUpdated(() => {
@@ -33,18 +29,15 @@ onUpdated(() => {
     }
 });
 
-const updateFood = () => {
-    const url = route('foods.update', { 'id': props.food.id });
-    Inertia.post(url, {
-        _method: 'put',
+const CreateFood = () => {
+    const url = route('foods.store');
+    form.post(url,{
         forceFormData: true,
-        image: form.image,
-        name: form.name,
-        count: form.count,
-        image_path: form.image_path,
-        category_id: form.category_id,
-        description: form.description,
-    })
+        onError: e => { console.log('onError', e); },
+        onFinish: () => {
+            form.reset();
+        },
+    });
 }
 
 const updateImage = (e) => {
@@ -58,34 +51,28 @@ const updateImage = (e) => {
 <template>
     <MainLayout>
 
-        <Head title="Show food detail"></Head>
+        <Head title="Create food"></Head>
         <div>
             <div class="mt-3 mb-3">
-                <h1>Modify item food</h1>
+                <h1>Create item food</h1>
             </div>
 
-            <div v-if="notification" class="alert alert-danger" role="alert">
-                {{ usePage().props.value.flash.message }}
-            </div>
-
-            <form @submit.prevent="updateFood">
+            <form @submit.prevent="CreateFood">
                 <div class="form-group mb-3">
                     <InputLable>Name</InputLable>
                     <TextInput type="text" v-model="form.name" autofocus placeholder="Enter food's name"></TextInput>
-                    <InputError v-if="errors.name" :message="errors.name">
+                    <InputError v-if="form.errors.name" :message="form.errors.name">
                     </InputError>
                 </div>
 
                 <!--image-->
                 <div class="form-group mb-3">
-                    <img :src="'/images/' + food.image_path" id="show_image" class="img-thumbnail" width="200"
+                    <img v-if="form.image" id="show_image" class="img-thumbnail" width="200"
                         height="200">
-                    <input type="text" class="form-control" hidden :value="food.image_path" id="image_path"
-                        name="image_path">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">Change image</span>
+                        <span class="input-group-text">Choice image for food</span>
                     </div>
                     <div class="custom-file">
                         <label for="input_file_image" id="name_image" class="name-image-food">Choose file</label>
@@ -94,24 +81,24 @@ const updateImage = (e) => {
                             accept="image/png, image/jpg, image/jpeg">
                     </div>
                 </div>
-                <InputError v-if="errors.image" :message="errors.image"></InputError>
+                <InputError v-if="form.errors.image" :message="form.errors.image"></InputError>
 
 
                 <div class="form-group mb-3">
                     <InputLable>Count</InputLable>
-                    <TextInput type="text" v-model="form.count" placeholder="Enter food's count"></TextInput>
-                    <InputError v-if="errors.count" :message="errors.count"></InputError>
+                    <TextInput type="number" v-model="form.count" placeholder="Enter food's count"></TextInput>
+                    <InputError v-if="form.errors.count" :message="form.errors.count"></InputError>
                 </div>
 
                 <div class="form-group mb-3">
                     <label for="category_id">Category</label>
                     <select class="custom-select" v-model="form.category_id">
-                        <option value="">--Choose a categories--</option>
+                        <option selected>--Choose a categories--</option>
                         <option v-for="category in categories" :value="category.id">
                             {{ category.name }}
                         </option>
                     </select>
-                    <InputError v-if="errors.category_id" :message="errors.category_id"></InputError>
+                    <InputError v-if="form.errors.category_id" :message="form.errors.category_id"></InputError>
                 </div>
 
                 <div class="form-group mb-3">
@@ -120,9 +107,14 @@ const updateImage = (e) => {
                         placeholder="Enter food's description" v-model="form.description"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary mb-3 mr-1"
+                <button type="submit" :disabled="form.processing" class="btn btn-primary mb-3 mr-1"
                     value="">Save</button>
                 <Link :href="route('foods.index')" class="btn btn-secondary mb-3" value="">Back</Link>
+                <div>
+                    <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+                    {{ form.progress.percentage }}%
+                </progress>
+                </div>
             </form>
         </div>
     </MainLayout>

@@ -22,7 +22,6 @@ class FoodsController extends Controller
             if ($request->has('page')) {
                 // You can set this to any page you want to paginate to
                 $currentPage = $request->query('page');
-                //dd($request);
             }
 
             // Make sure that you call the static method currentPageResolver()
@@ -31,7 +30,15 @@ class FoodsController extends Controller
                 return $currentPage;
             });
 
-            $foodsPaging = Food::Paginate($this->pageSize);
+            $filter="";
+            if ($request->has('filter')) {
+                // You can set this to any page you want to paginate to
+                $filter = $request->query('filter');
+            }
+
+            $foodsPaging = Food::where('name','like',"%".$filter."%")
+                                ->orderBy('created_at','DESC')
+                                ->Paginate($this->pageSize);
 
             foreach ($foodsPaging as $item) {
                 $item->category->name;
@@ -51,14 +58,16 @@ class FoodsController extends Controller
 
     public function create()
     {
+        // dd('create');
         $categories = $this->getCategories();
-        return view('foods.create', ['categories' => $categories]);
+
+        return Inertia::render('Food/CreateFood', ['categories' => $categories]);
+        // return view('foods.create', ['categories' => $categories]);
     }
 
     public function store(Request $request)
     {
         try {
-            dd($request);
             // validate data request
             $request->validate([
                 "name" => "required|unique:foods|max:255",
@@ -70,17 +79,17 @@ class FoodsController extends Controller
             //client image's name and server's image name
             //must be different, why ??
             $ext =  $request->image->extension();
-            $generatedImageName = 'image' . '-' . time() . '.' . $ext;
+            $generatedImageName = 'image' . '-' . date('Ymd') . '-' . time() . '.' . $ext;
 
             //move to a folder
             $request->image->move(public_path('images'), $generatedImageName);
 
             //if the validation is pass, it will create object food new
             $foodAdd = Food::create([
-                'name' => $request->input('name'),
-                'count' => $request->input('count'),
-                'category_id' => $request->input('category_id'),
-                'description' => $request->input('description'),
+                'name' => $request->name,
+                'count' => $request->count,
+                'category_id' => $request->category_id,
+                'description' => $request->description,
                 'image_path' => $generatedImageName,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -90,11 +99,7 @@ class FoodsController extends Controller
             //save data to database
             $foodAdd->save();
 
-            $response = array(
-                "message" => "Create food success!",
-                'type' => "success",
-            );
-            return Redirect('/foods')->with($response);
+            return Redirect('/foods')->with("message", "Created food success!");
         } catch (Throwable $exception) {
 
             Log::channel('log_app')->error($exception->getMessage());
@@ -108,7 +113,7 @@ class FoodsController extends Controller
             $foodEdit = Food::find($id);
             $categories = $this->getCategories();
 
-            return Inertia::render('Food/EditFood',['categories' => $categories, 'food' => $foodEdit]);
+            return Inertia::render('Food/EditFood', ['categories' => $categories, 'food' => $foodEdit]);
             //return view('foods.edit', ['categories' => $categories, 'food' => $foodEdit]);
         } catch (Throwable $exception) {
 
@@ -120,13 +125,12 @@ class FoodsController extends Controller
     public function update(Request $request, $id)
     {
         try {
-           
-            return back()->with("message" ,"Modify food don't success!");
-            $image_path = "";
-            $food = Food::find($id);
-            if(!$food)
-                return back()->with("message" ,"Modify food don't success!");
 
+            $food = Food::find($id);
+            if (!$food)
+                return back()->with("message", "Modify food don't success!");
+
+            $image_path = "";
             if ($request->hasFile('image')) {
                 // validate data request if has file image
                 $request->validate([
@@ -134,13 +138,13 @@ class FoodsController extends Controller
                     "count" => "required|integer|min:0|max:1000",
                     "category_id" => "required",
                     //Validate image
-                    'image' => 'required|mimes:jpg,png,jpeg|max:100'
+                    'image' => 'required|mimes:jpg,png,jpeg|max:5048'
                 ]);
 
                 //client image's name and server's image name
                 //must be different, why ??
                 $ext =  $request->image->extension();
-                $generatedImageName = 'image' . '-' .date('Ymd').'-'. time() . '.' . $ext;
+                $generatedImageName = 'image' . '-' . date('Ymd') . '-' . time() . '.' . $ext;
 
                 //move to a folder
                 $request->image->move(public_path('images'), $generatedImageName);
@@ -192,7 +196,7 @@ class FoodsController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            //dd($request,$id);
+           //dd($request,$id);
             $foodDelete = Food::find($id);
             if (is_null($foodDelete)) {
                 $response  = array(

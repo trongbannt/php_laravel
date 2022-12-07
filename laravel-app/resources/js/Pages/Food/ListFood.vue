@@ -1,18 +1,33 @@
 <script setup>
 import MainLayout from '@/Layouts/Layout.vue';
 import Modal from '@/Components/Modal.vue'
-import { Head, Link } from '@inertiajs/inertia-vue3';
+import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
 import Paginate from 'vuejs-paginate-next';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { Inertia } from '@inertiajs/inertia'
 
-defineProps({
+const notification = ref(false);
+const confirmingUserDeletion = ref(false);
+const foodDelete = ref(null);
+const filter=ref(null);
+
+const props = defineProps({
     foods: [],
 });
 
-const confirmingUserDeletion = ref(false);
-const foodDelete = ref(null);
+onMounted(() => {
+    if (usePage().props.value.flash.message) {
+        notification.value = true;
+        setTimeout(function () {
+            notification.value = false;
+        }, 3000);
+    }
+});
 
+const searchFood = ()=>{
+    console.log('searchFood',filter.value);
+    Inertia.get(route('foods.index', { 'filter':filter.value }))
+}
 
 const closeModal = () => {
     confirmingUserDeletion.value = false;
@@ -24,19 +39,15 @@ const closeModal = () => {
 
 const confirmUserDeletion = (id) => {
     confirmingUserDeletion.value = true;
-    foodDelete.value = id;
+    var lstFood = usePage().props.value.foods.data;
+    foodDelete.value = lstFood.find(item=>item.id==id);
 }
 
 const deleteFood = () => {
-    Inertia.delete(route('foods.destroy', { 'id': foodDelete.value }), {
+    Inertia.delete(route('foods.destroy', { 'id': foodDelete.value.id }), {
         preserveState: false,
         preserveScroll: false,
-        onBefore: visit => { },
-        onStart: visit => { },
-        onProgress: progress => { },
-        onSuccess: page => { closeModal(); },
-        onError: errors => { },
-        onFinish: visit => { },
+        onSuccess: () => { closeModal(); },
     })
 }
 
@@ -47,12 +58,6 @@ const clickCallback = function (pageNum) {
         method: 'get',
         preserveState: true,
         preserveScroll: true,
-        onBefore: visit => { },
-        onStart: visit => { },
-        onProgress: progress => { },
-        onSuccess: page => { },
-        onError: errors => { },
-        onFinish: visit => { },
     })
 }
 
@@ -74,7 +79,34 @@ const getPageCount = (total, pageSize) => {
     <MainLayout>
 
         <Head title="Foods"></Head>
-        <div>
+
+        <div class="mt-4">
+            <div v-if="notification" class="alert alert-success" role="alert">
+                {{ usePage().props.value.flash.message }}
+            </div>
+            <div class="d-flex flex-row mb-3">
+                <div class="mr-auto">
+                    <Link :href="route('foods.create')" type="button" class="btn btn-primary">Add food</Link>
+                </div>
+                <div>
+                    <div class="input-group">
+                        <span class="input-group-prepend">
+                            <div class="input-group-text bg-transparent border-right-0"><i class="bi bi-search"></i></div>
+                        </span>
+                        <input class="form-control py-2 border-left-0 border" 
+                            type="search" 
+                            v-model="filter"
+                            @keyup.enter="searchFood"
+                            placeholder="Search..." 
+                            id="example-search-input">
+                        <span class="input-group-append">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button" @click="searchFood">
+                                Search
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
             <div class="table-responsive-md">
                 <table class="table table-hover">
                     <thead class="text-center">
@@ -98,7 +130,8 @@ const getPageCount = (total, pageSize) => {
                             <td>{{ food.description }}</td>
                             <td>{{ food.category.name }}</td>
                             <td class="text-right" style="padding-right: 0">
-                                <Link :href="(route('foods.edit', { 'id': food.id }))" class="btn btn-primary">Edit</Link>
+                                <Link :href="(route('foods.edit', { 'id': food.id }))" class="btn btn-primary">Edit
+                                </Link>
                             </td>
                             <td class="text-left">
                                 <a class="btn btn-danger delete_food " @click="confirmUserDeletion(food.id)"
@@ -112,7 +145,8 @@ const getPageCount = (total, pageSize) => {
             </div>
 
             <div v-if="(foods.total > foods.per_page)" class="d-flex align-items-center">
-                <span class="mr-auto text-muted">Showing {{ foods.from }} to {{ foods.to }} of {{ foods.total }} results</span>
+                <span class="mr-auto text-muted">Showing {{ foods.from }} to {{ foods.to }} of {{ foods.total }}
+                    results</span>
                 <div class="align-self-center">
                     <paginate :v-model="foods.current_page" :page-count="getPageCount(foods.total, foods.per_page)"
                         :container-class="'pagination justify-content-end pt-1'" :prev-text="prev" :next-text="next"
@@ -123,7 +157,7 @@ const getPageCount = (total, pageSize) => {
                         :first-last-button="false">
                     </paginate>
                 </div>
-                
+
             </div>
         </div>
         <!--Modal-->
@@ -133,7 +167,12 @@ const getPageCount = (total, pageSize) => {
             </template>
             <template #body>
                 <div>
-                    <p>Are you sure your want to delete your account?</p>
+                    <p class="font-weight-bold">Are you sure your want to delete your account?</p>
+                    <div v-if="foodDelete" class=" font-italic">
+                        <p class="mb-1"><span>&#9755;</span> {{ foodDelete.name }}</p>
+                        <p class="mb-1"><span>&#9755;</span> {{ foodDelete.category.name }}</p>
+                        <p class="mb-1" v-if="foodDelete.description"><span>&#9755;</span> {{ foodDelete.description }}</p>
+                    </div>
                 </div>
             </template>
             <template #footer>
