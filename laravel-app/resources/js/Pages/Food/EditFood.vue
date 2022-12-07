@@ -1,7 +1,7 @@
 <script setup>
 import MainLayout from '@/Layouts/Layout.vue';
 import { Head, Link, useForm, usePage } from '@inertiajs/inertia-vue3';
-import { ref, onUpdated,onBeforeMount } from 'vue';
+import { ref, onUpdated } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
@@ -11,7 +11,7 @@ const notification = ref(false);
 
 const props = defineProps({
     food: {},
-    categories: [],
+    categories: Array,
     errors: {},
 });
 
@@ -25,7 +25,7 @@ const form = useForm({
 });
 
 onUpdated(() => {
-    if (usePage().props.value.flash) {
+    if (usePage().props.value.flash.message) {
         notification.value = true;
         setTimeout(function () {
             notification.value = false;
@@ -60,7 +60,7 @@ const updateImage = (e) => {
 
         <Head title="Show food detail"></Head>
         <div>
-            <div class="mt-3 mb-3">
+            <div class="mt-4 mb-3">
                 <h1>Modify item food</h1>
             </div>
 
@@ -77,11 +77,9 @@ const updateImage = (e) => {
                 </div>
 
                 <!--image-->
-                <div class="form-group mb-3">
+                <div class="form-group mb-3" v-if="food.image_path">
                     <img :src="'/images/' + food.image_path" id="show_image" class="img-thumbnail" width="200"
                         height="200">
-                    <input type="text" class="form-control" hidden :value="food.image_path" id="image_path"
-                        name="image_path">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
@@ -99,7 +97,7 @@ const updateImage = (e) => {
 
                 <div class="form-group mb-3">
                     <InputLable>Count</InputLable>
-                    <TextInput type="text" v-model="form.count" placeholder="Enter food's count"></TextInput>
+                    <TextInput type="number" v-model="form.count" placeholder="Enter food's count"></TextInput>
                     <InputError v-if="errors.count" :message="errors.count"></InputError>
                 </div>
 

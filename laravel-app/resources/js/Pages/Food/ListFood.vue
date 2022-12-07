@@ -9,14 +9,14 @@ import { Inertia } from '@inertiajs/inertia'
 const notification = ref(false);
 const confirmingUserDeletion = ref(false);
 const foodDelete = ref(null);
-const filter=ref(null);
+const filter = ref(null);
 
 const props = defineProps({
-    foods: [],
+    foods: Array,
 });
 
 onMounted(() => {
-    if (usePage().props.value.flash.message) {
+    if (usePage().props.value.flash.message || usePage().props.value.flash.notification) {
         notification.value = true;
         setTimeout(function () {
             notification.value = false;
@@ -24,9 +24,9 @@ onMounted(() => {
     }
 });
 
-const searchFood = ()=>{
-    console.log('searchFood',filter.value);
-    Inertia.get(route('foods.index', { 'filter':filter.value }))
+const searchFood = () => {
+    console.log('searchFood', filter.value);
+    Inertia.get(route('foods.index', { 'filter': filter.value }))
 }
 
 const closeModal = () => {
@@ -40,7 +40,7 @@ const closeModal = () => {
 const confirmUserDeletion = (id) => {
     confirmingUserDeletion.value = true;
     var lstFood = usePage().props.value.foods.data;
-    foodDelete.value = lstFood.find(item=>item.id==id);
+    foodDelete.value = lstFood.find(item => item.id == id);
 }
 
 const deleteFood = () => {
@@ -81,9 +81,22 @@ const getPageCount = (total, pageSize) => {
         <Head title="Foods"></Head>
 
         <div class="mt-4">
-            <div v-if="notification" class="alert alert-success" role="alert">
-                {{ usePage().props.value.flash.message }}
+            <div v-if="notification">
+                <div v-if="usePage().props.value.flash.notification">
+                    <div v-if="usePage().props.value.flash.notification.status == 'success'" class="alert alert-success"
+                        role="alert">
+                        {{ usePage().props.value.flash.notification.message }}
+                    </div>
+                    <div v-else-if="usePage().props.value.flash.notification.status == 'error'" class="alert alert-danger"
+                        role="alert">
+                        {{ usePage().props.value.flash.notification.message }}
+                    </div>
+                </div>
+                <div v-else class="alert alert-success" role="alert">
+                    {{ usePage().props.value.flash.message }}
+                </div>
             </div>
+
             <div class="d-flex flex-row mb-3">
                 <div class="mr-auto">
                     <Link :href="route('foods.create')" type="button" class="btn btn-primary">Add food</Link>
@@ -91,16 +104,14 @@ const getPageCount = (total, pageSize) => {
                 <div>
                     <div class="input-group">
                         <span class="input-group-prepend">
-                            <div class="input-group-text bg-transparent border-right-0"><i class="bi bi-search"></i></div>
+                            <div class="input-group-text bg-transparent border-right-0"><i class="bi bi-search"></i>
+                            </div>
                         </span>
-                        <input class="form-control py-2 border-left-0 border" 
-                            type="search" 
-                            v-model="filter"
-                            @keyup.enter="searchFood"
-                            placeholder="Search..." 
-                            id="example-search-input">
+                        <input class="form-control py-2 border-left-0 border" type="search" v-model="filter"
+                            @keyup.enter="searchFood" placeholder="Search..." id="example-search-input">
                         <span class="input-group-append">
-                            <button class="btn btn-outline-secondary border-left-0 border" type="button" @click="searchFood">
+                            <button class="btn btn-outline-secondary border-left-0 border" type="button"
+                                @click="searchFood">
                                 Search
                             </button>
                         </span>
@@ -122,7 +133,7 @@ const getPageCount = (total, pageSize) => {
                     </thead>
                     <tbody>
                         <tr class="text-center" v-for="(food, index) in foods.data">
-                            <td>{{ index + 1 }}</td>
+                            <td>{{ (index + 1 + ((foods.current_page - 1) * foods.per_page)) }}</td>
                             <td>
                                 <Link :href="(route('foods.show', { 'id': food.id }))">{{ food.name }}</Link>
                             </td>
@@ -171,7 +182,8 @@ const getPageCount = (total, pageSize) => {
                     <div v-if="foodDelete" class=" font-italic">
                         <p class="mb-1"><span>&#9755;</span> {{ foodDelete.name }}</p>
                         <p class="mb-1"><span>&#9755;</span> {{ foodDelete.category.name }}</p>
-                        <p class="mb-1" v-if="foodDelete.description"><span>&#9755;</span> {{ foodDelete.description }}</p>
+                        <p class="mb-1" v-if="foodDelete.description"><span>&#9755;</span> {{ foodDelete.description }}
+                        </p>
                     </div>
                 </div>
             </template>

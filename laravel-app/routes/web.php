@@ -2,13 +2,9 @@
 
 use App\Http\Controllers\FoodsController;
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PostsController;
-use App\Http\Controllers\TestMiddlewareController;
 use App\Http\Controllers\ProfilesController;
-
 use Illuminate\Foundation\Application;
 use Inertia\Inertia;
 
@@ -24,32 +20,10 @@ use Inertia\Inertia;
 */
 
 
-// Route::get('/welcome', function () {
-//     return view('welcome');
-// });
-
-
-// /*Products pages*/
-// Route::get("products", [
-//     ProductsController::class,
-//     "index" //index function of ProductsController
-// ]);
-
-// Route::get("products/{name}", [
-//     ProductsController::class,
-//     "detail"
-// ])->where("name", "[a-zA-Z0-9]+");
-
-// /*Pages home */
-// Route::get("/", [
-//     PagesController::class,
-//     'index'
-// ]);
-
-// Route::get("/about", [
-//     PagesController::class,
-//     'about'
-// ]);
+Route::get("/about", [
+    PagesController::class,
+    'about'
+]);
 
 /*Posts */
 Route::resource('/posts', PostsController::class)->middleware([
@@ -57,11 +31,6 @@ Route::resource('/posts', PostsController::class)->middleware([
     'verified'
 ]);
 
-// /*Foods */
-// Route::resource('/foods',FoodsController::class)->middleware([
-//     'auth', 
-//     'verified'
-// ]);
 
 Route::middleware('auth')->group(function(){
     Route::get('/profile',[ProfilesController::class,'edit'])->name('profile.edit');

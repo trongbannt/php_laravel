@@ -30,15 +30,14 @@ class FoodsController extends Controller
                 return $currentPage;
             });
 
-            $filter="";
+            $filter = "";
             if ($request->has('filter')) {
-                // You can set this to any page you want to paginate to
                 $filter = $request->query('filter');
             }
 
-            $foodsPaging = Food::where('name','like',"%".$filter."%")
-                                ->orderBy('created_at','DESC')
-                                ->Paginate($this->pageSize);
+            $foodsPaging = Food::where('name', 'like', "%" . $filter . "%")
+                ->orderBy('created_at', 'DESC')
+                ->Paginate($this->pageSize);
 
             foreach ($foodsPaging as $item) {
                 $item->category->name;
@@ -49,8 +48,6 @@ class FoodsController extends Controller
             //return response()->json(['foods' => $foodsPaging]);
 
         } catch (Throwable $exception) {
-
-            // dd($exception);
             Log::channel('log_app')->error($exception);
             throw $exception;
         }
@@ -58,7 +55,6 @@ class FoodsController extends Controller
 
     public function create()
     {
-        // dd('create');
         $categories = $this->getCategories();
 
         return Inertia::render('Food/CreateFood', ['categories' => $categories]);
@@ -76,13 +72,9 @@ class FoodsController extends Controller
                 'image' => 'required|mimes:jpg,png,jpeg|max:5048'
             ]);
 
-            //client image's name and server's image name
-            //must be different, why ??
-            $ext =  $request->image->extension();
-            $generatedImageName = 'image' . '-' . date('Ymd') . '-' . time() . '.' . $ext;
-
-            //move to a folder
-            $request->image->move(public_path('images'), $generatedImageName);
+            // //client image's name and server's image name
+            // //must be different, why ??
+            $image_path = $this->generatedImageName($request->image);
 
             //if the validation is pass, it will create object food new
             $foodAdd = Food::create([
@@ -90,7 +82,7 @@ class FoodsController extends Controller
                 'count' => $request->count,
                 'category_id' => $request->category_id,
                 'description' => $request->description,
-                'image_path' => $generatedImageName,
+                'image_path' => $image_path,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -101,7 +93,6 @@ class FoodsController extends Controller
 
             return Redirect('/foods')->with("message", "Created food success!");
         } catch (Throwable $exception) {
-
             Log::channel('log_app')->error($exception->getMessage());
             throw $exception;
         }
@@ -116,7 +107,6 @@ class FoodsController extends Controller
             return Inertia::render('Food/EditFood', ['categories' => $categories, 'food' => $foodEdit]);
             //return view('foods.edit', ['categories' => $categories, 'food' => $foodEdit]);
         } catch (Throwable $exception) {
-
             Log::channel('log_app')->error($exception->getMessage());
             throw $exception;
         }
@@ -125,7 +115,6 @@ class FoodsController extends Controller
     public function update(Request $request, $id)
     {
         try {
-
             $food = Food::find($id);
             if (!$food)
                 return back()->with("message", "Modify food don't success!");
@@ -143,12 +132,7 @@ class FoodsController extends Controller
 
                 //client image's name and server's image name
                 //must be different, why ??
-                $ext =  $request->image->extension();
-                $generatedImageName = 'image' . '-' . date('Ymd') . '-' . time() . '.' . $ext;
-
-                //move to a folder
-                $request->image->move(public_path('images'), $generatedImageName);
-                $image_path = $generatedImageName;
+                $image_path = $this->generatedImageName($request->image);
             } else {
                 // validate data request if has not file image
                 $request->validate([
@@ -180,12 +164,7 @@ class FoodsController extends Controller
                 'updated_at' => now(),
             ]]);
 
-            $response = array(
-                "message" => "Modify food success!",
-                'type' => "success",
-            );
-
-            return Redirect('/foods')->with($response);
+            return Redirect('/foods')->with("message", "Modify food success!");
         } catch (Throwable $exception) {
 
             Log::channel('log_app')->error($exception->getMessage());
@@ -196,26 +175,24 @@ class FoodsController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-           //dd($request,$id);
             $foodDelete = Food::find($id);
             if (is_null($foodDelete)) {
                 $response  = array(
                     "message" => "Delete food don't success!",
-                    'type' => "error",
+                    'status' => "error",
                 );
 
-                return Redirect('/foods')->with($response);
+                return back()->with('notification',$response);
             }
 
             $foodDelete->delete();
             Log::channel('log_app')->info('DELETED', ['Food' => $foodDelete]);
             $response = array(
                 "message" => "Delete food success!",
-                'type' => "success",
+                'status' => "success",
             );
-            return Redirect('/foods')->with($response);
+            return back()->with('notification',$response);
         } catch (Throwable $exception) {
-
             Log::channel('log_app')->error($exception->getMessage());
             throw $exception;
         }
@@ -241,6 +218,18 @@ class FoodsController extends Controller
     {
         $categories = Category::all();
         return $categories;
+    }
+
+    private function generatedImageName($image)
+    {
+        //client image's name and server's image name
+        //must be different, why ??
+        $ext =  $image->extension();
+        $generatedImageName = 'image' . '-' . date('Ymd') . '-' . time() . '.' . $ext;
+
+        //move to a folder
+        $image->move(public_path('images'), $generatedImageName);
+        return $generatedImageName;
     }
     /**End Function support */
 }

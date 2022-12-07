@@ -1,5 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
+
+
 </script>
 
 <template>
@@ -45,7 +47,7 @@ import { Link } from '@inertiajs/inertia-vue3';
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <Link class="dropdown-item" :href="route('profile.edit')">Profile</Link>
                                 <!-- logout -->
-                                <Link method="POST" class="dropdown-item" :href="route('logout')">Logout</Link>
+                                <Link method="POST" class="dropdown-item" as="button" type="button" :href="route('logout')">Logout</Link>
                                 <!--end logout -->
                             </div>
                         </li>
