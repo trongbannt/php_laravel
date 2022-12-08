@@ -1,26 +1,19 @@
 Em gửi
-Report date:  2022/12/01
+Report date:  2022/12/08
 
 Công việc trong ngày:
-Laravel + vuejs:
-build function profile accout
-- update info user(done)
-- update password(done)
-- delete accout(done)
+Laravel + vuejs: 
+build function 
+- use vuejs build CRUD
++ search item(done)
++ Query Builder when join multi table
 
 Công việc ngày tiếp theo: 
 Laravel + vuejs: 
-build function profile accout
-- use vuejs build CRUD(Example: screen food)
-+ Show data 
-+ create item
-+ update item
-+ Delete item
-+ paging
+- laravel Eloquent interact with database
+- Inertia:approach to building classic server-driven web apps 
 
-Issue: 
-config include boostrap 
-
+Issue:
 
 
 -------------------------------------------

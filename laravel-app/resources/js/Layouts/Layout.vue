@@ -6,8 +6,9 @@ import { Link } from '@inertiajs/inertia-vue3';
 
 <template>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-            <div class="container-fluid">
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark" 
+            style="background-color: #7fad39 !important;">
+            <div class="container container-fluid">
                 <a class="navbar-brand active" href="/">Home</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
@@ -17,23 +18,20 @@ import { Link } from '@inertiajs/inertia-vue3';
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
-                        <li class="nav-item ">
-                            <a class="nav-link "
-                                href="/products">Products
-                               </a>
-                        </li>
                         <li class="nav-item" v-if="$page.props.auth.user">
                             <a class="nav-link "  href="/posts">Posts</a>
                         </li>
                         <li class="nav-item" v-if="$page.props.auth.user">
-                            <Link class="nav-link" :href="route('foods.index')">Foods</Link>
+                            <Link class="nav-link" :href="route('foods.index')" :class="{ 'active': $page.url === '/foods' }">Foods</Link>
                         </li>
                         <li class="nav-item">
-                            <Link class="nav-link" :href="route('about')"> About</Link>
+                            <Link class="nav-link" :href="route('about')" :class="{ 'active': $page.url === '/about' }"> About</Link>
                         </li>
+                    </ul>
 
-                        <li class="nav-item dropdown" v-if="$page.props.auth.user">
-                            <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button"
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown mr-auto" v-if="$page.props.auth.user">
+                            <a class="nav-link dropdown-toggle active"  id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span>
                                     <i class="bi bi-person-fill-gear" style="font-size: 0.75rem; color:#ffff"></i>

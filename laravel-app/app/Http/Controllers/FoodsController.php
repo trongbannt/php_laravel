@@ -9,10 +9,10 @@ use Throwable;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Pagination\Paginator;
+use App\Utilities\Constants;
 
 class FoodsController extends Controller
 {
-    public int $pageSize = 10;
 
     public function index(Request $request)
     {
@@ -36,13 +36,12 @@ class FoodsController extends Controller
             }
 
             $foodsPaging = Food::where('name', 'like', "%" . $filter . "%")
-                ->orderBy('created_at', 'DESC')
-                ->Paginate($this->pageSize);
+                ->orderByDesc('updated_at')
+                ->orderByDesc('created_at')
+                ->with('category')
+                ->Paginate(Constants::PAGE_SIZE);
 
-            foreach ($foodsPaging as $item) {
-                $item->category->name;
-            }
-
+              
             return Inertia::render('Food/ListFood', ['foods' => $foodsPaging]);
             //return view('foods.index', ['foods' => $foodsPaging]);
             //return response()->json(['foods' => $foodsPaging]);
@@ -91,7 +90,7 @@ class FoodsController extends Controller
             //save data to database
             $foodAdd->save();
 
-            return Redirect('/foods')->with("message", "Created food success!");
+            return Redirect('/foods')->with(Constants::MESSAGE, "Created food success!");
         } catch (Throwable $exception) {
             Log::channel('log_app')->error($exception->getMessage());
             throw $exception;
@@ -101,7 +100,7 @@ class FoodsController extends Controller
     public function edit($id)
     {
         try {
-            $foodEdit = Food::find($id);
+            $foodEdit = Food::findOrFail($id);
             $categories = $this->getCategories();
 
             return Inertia::render('Food/EditFood', ['categories' => $categories, 'food' => $foodEdit]);
@@ -115,10 +114,8 @@ class FoodsController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $food = Food::find($id);
-            if (!$food)
-                return back()->with("message", "Modify food don't success!");
 
+            $food = Food::findOrFail($id);
             $image_path = "";
             if ($request->hasFile('image')) {
                 // validate data request if has file image
@@ -164,7 +161,7 @@ class FoodsController extends Controller
                 'updated_at' => now(),
             ]]);
 
-            return Redirect('/foods')->with("message", "Modify food success!");
+            return Redirect('/foods')->with(Constants::MESSAGE, "Modify food success!");
         } catch (Throwable $exception) {
 
             Log::channel('log_app')->error($exception->getMessage());
@@ -175,23 +172,10 @@ class FoodsController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $foodDelete = Food::find($id);
-            if (is_null($foodDelete)) {
-                $response  = array(
-                    "message" => "Delete food don't success!",
-                    'status' => "error",
-                );
-
-                return back()->with('notification',$response);
-            }
-
+            $foodDelete = Food::findOrFail($id);
             $foodDelete->delete();
             Log::channel('log_app')->info('DELETED', ['Food' => $foodDelete]);
-            $response = array(
-                "message" => "Delete food success!",
-                'status' => "success",
-            );
-            return back()->with('notification',$response);
+            return back()->with(Constants::MESSAGE, "Delete food success!");
         } catch (Throwable $exception) {
             Log::channel('log_app')->error($exception->getMessage());
             throw $exception;
@@ -201,7 +185,7 @@ class FoodsController extends Controller
     public function show($id)
     {
         try {
-            $food = Food::find($id);
+            $food = Food::findOrFail($id);
             $food->category->name;
             return Inertia::render('Food/ShowFood', ['food' => $food]);
             // return view('foods.detail')->with('food', $food);

@@ -29,7 +29,6 @@ Route::get("/about", [
 /*Posts */
 Route::resource('/posts', PostsController::class)->middleware([
     'auth', 
-    'verified'
 ]);
 
 
@@ -38,6 +37,7 @@ Route::middleware('auth')->group(function(){
     Route::patch('/profile', [ProfilesController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfilesController::class, 'destroy'])->name('profile.destroy');
     Route::resource('/foods',FoodsController::class);
+    Route::resource('/posts', PostsController::class);
 });
 
 // /**FE use vuejs */
