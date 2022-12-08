@@ -10,7 +10,7 @@ build function
 
 Công việc ngày tiếp theo: 
 Laravel + vuejs: 
-- laravel Eloquent interact with database
+- laravel Eloquent interact with database(Eloquent: Relationships)(doing)
 - Inertia:approach to building classic server-driven web apps 
 
 Issue:
