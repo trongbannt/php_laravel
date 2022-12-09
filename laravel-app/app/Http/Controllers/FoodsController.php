@@ -185,8 +185,7 @@ class FoodsController extends Controller
     public function show($id)
     {
         try {
-            $food = Food::findOrFail($id);
-            $food->category->name;
+            $food = Food::with('category')->findOrFail($id);
             return Inertia::render('Food/ShowFood', ['food' => $food]);
             // return view('foods.detail')->with('food', $food);
         } catch (Throwable $exception) {

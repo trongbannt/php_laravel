@@ -41,9 +41,7 @@ Route::middleware('auth')->group(function(){
 });
 
 // /**FE use vuejs */
-Route::get('/', function () {
-    return Inertia::render('Index');
-})->name('home');
+Route::get('/',[PagesController::class,'index'])->name('home');
 
 require __DIR__.'/auth.php';
 

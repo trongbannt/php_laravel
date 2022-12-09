@@ -25,6 +25,7 @@
         "@vitejs/plugin-vue": "^3.2.0",
         "bootstrap-icons": "^1.10.2",
         "bootstrap-vue": "^2.23.1",
+        "font-awesome": "^4.7.0",
         "vue": "^3.2.45",
         "vue-router": "^3.6.5",
         "vuejs-paginate-next": "^1.0.2",
