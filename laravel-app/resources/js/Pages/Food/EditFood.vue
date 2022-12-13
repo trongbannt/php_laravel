@@ -89,7 +89,7 @@ const updateImage = (e) => {
                         <label for="input_file_image" id="name_image" class="name-image-food">Choose file</label>
                         <input type="file" id="input_file_image" class="custom-file-input" name="image"
                             @input="form.image = $event.target.files[0]" @change="updateImage"
-                            accept="image/png, image/jpg, image/jpeg">
+                            accept="image/*">
                     </div>
                 </div>
                 <InputError v-if="errors.image" :message="errors.image"></InputError>

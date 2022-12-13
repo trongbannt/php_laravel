@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Food;
-use App\Models\Category;
 use Throwable;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Pagination\Paginator;
 use App\Utilities\Constants;
+use App\Http\Service\CategoryService;
+use Illuminate\Support\Facades\Redirect;
 
 class FoodsController extends Controller
 {
@@ -19,6 +20,7 @@ class FoodsController extends Controller
         try {
 
             $currentPage = 1;
+            $query= Food::with('category:id,name');
             if ($request->has('page')) {
                 // You can set this to any page you want to paginate to
                 $currentPage = $request->query('page');
@@ -33,15 +35,13 @@ class FoodsController extends Controller
             $filter = "";
             if ($request->has('filter')) {
                 $filter = $request->query('filter');
+                $query = $query->where('name', 'like', "%" . $filter . "%");
             }
 
-            $foodsPaging = Food::where('name', 'like', "%" . $filter . "%")
-                ->orderByDesc('updated_at')
-                ->orderByDesc('created_at')
-                ->with('category')
-                ->Paginate(Constants::PAGE_SIZE);
+            $foodsPaging = $query->orderByDesc('updated_at')
+                                ->orderByDesc('created_at')
+                                ->Paginate(Constants::PAGE_SIZE);
 
-              
             return Inertia::render('Food/ListFood', ['foods' => $foodsPaging]);
             //return view('foods.index', ['foods' => $foodsPaging]);
             //return response()->json(['foods' => $foodsPaging]);
@@ -54,7 +54,7 @@ class FoodsController extends Controller
 
     public function create()
     {
-        $categories = $this->getCategories();
+        $categories = CategoryService::getCategories();
 
         return Inertia::render('Food/CreateFood', ['categories' => $categories]);
         // return view('foods.create', ['categories' => $categories]);
@@ -68,7 +68,8 @@ class FoodsController extends Controller
                 "name" => "required|unique:foods|max:255",
                 "count" => "required|integer|min:0|max:1000",
                 "category_id" => "required",
-                'image' => 'required|mimes:jpg,png,jpeg|max:5048'
+                //'image' => 'required|mimes:jpg,png,jpeg|max:5048'
+                'image' => 'required|image|max:5048'
             ]);
 
             // //client image's name and server's image name
@@ -101,7 +102,7 @@ class FoodsController extends Controller
     {
         try {
             $foodEdit = Food::findOrFail($id);
-            $categories = $this->getCategories();
+            $categories =  CategoryService::getCategories();
 
             return Inertia::render('Food/EditFood', ['categories' => $categories, 'food' => $foodEdit]);
             //return view('foods.edit', ['categories' => $categories, 'food' => $foodEdit]);
@@ -124,7 +125,8 @@ class FoodsController extends Controller
                     "count" => "required|integer|min:0|max:1000",
                     "category_id" => "required",
                     //Validate image
-                    'image' => 'required|mimes:jpg,png,jpeg|max:5048'
+                    // 'image' => 'required|mimes:jpg,png,jpeg|max:5048'
+                    'image' => 'required|image|max:5048'
                 ]);
 
                 //client image's name and server's image name
@@ -169,7 +171,7 @@ class FoodsController extends Controller
         }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
         try {
             $foodDelete = Food::findOrFail($id);
@@ -185,7 +187,7 @@ class FoodsController extends Controller
     public function show($id)
     {
         try {
-            $food = Food::with('category')->findOrFail($id);
+            $food = Food::with('category:name')->findOrFail($id);
             return Inertia::render('Food/ShowFood', ['food' => $food]);
             // return view('foods.detail')->with('food', $food);
         } catch (Throwable $exception) {
@@ -197,21 +199,15 @@ class FoodsController extends Controller
 
 
     /**Function support */
-    private function getCategories()
-    {
-        $categories = Category::all();
-        return $categories;
-    }
-
     private function generatedImageName($image)
     {
         //client image's name and server's image name
         //must be different, why ??
         $ext =  $image->extension();
-        $generatedImageName = 'image' . '-' . date('Ymd') . '-' . time() . '.' . $ext;
+        $generatedImageName = 'food/image' . '-' . date('Ymd') . '-' . time() . '.' . $ext;
 
         //move to a folder
-        $image->move(public_path('images'), $generatedImageName);
+        $image->move(public_path('images/food'), $generatedImageName);
         return $generatedImageName;
     }
     /**End Function support */

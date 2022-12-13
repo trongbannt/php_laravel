@@ -22,7 +22,7 @@ import { Link } from '@inertiajs/inertia-vue3';
                             <a class="nav-link "  href="/posts">Posts</a>
                         </li>
                         <li class="nav-item" v-if="$page.props.auth.user">
-                            <Link class="nav-link" :href="route('foods.index')" :class="{ 'active': $page.url === '/foods' }">Foods</Link>
+                            <Link class="nav-link" :href="route('foods.index')" :class="{ 'active': $page.url.startsWith('/foods') }">Foods</Link>
                         </li>
                         <li class="nav-item">
                             <Link class="nav-link" :href="route('about')" :class="{ 'active': $page.url === '/about' }"> About</Link>

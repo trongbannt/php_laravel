@@ -1,195 +1,107 @@
 <script setup>
 import MainLayout from '../Layouts/Layout.vue';
-import { Head } from '@inertiajs/inertia-vue3';
-import FoodItem from '../Components/Food/FoodItem.vue';
+import { Head, Link } from '@inertiajs/inertia-vue3';
+import Paginate from 'vuejs-paginate-next';
+import moment from 'moment';
+import SearchSidebar from '@/Components/SearchSidebar.vue';
 
 defineProps({
-
+    foods: {},
+    categories: Array,
+    prev: null, // fix warning
+    next: null // fix warning
 });
+
+
+const format_date = (value) => {
+    if (value) {
+        return moment(String(value)).format('MMM D, YYYY')
+    }
+}
+
+const getPageCount = (total, pageSize) => {
+    var pageCount = 0;
+    if ((total % pageSize) > 0) {
+        pageCount = Math.floor(total / pageSize) + 1;
+    }
+    else {
+        pageCount = Math.floor(total / pageSize);
+    }
+
+    return pageCount;
+}
+
+//When next page
+const clickCallback = function (pageNum) {
+    var query = {
+        'page': pageNum
+    }
+    if (route().params.filter) {
+        query.filter = route().params.filter
+    }
+    if (route().params.category) {
+        query.category = route().params.category
+    }
+
+    this.$inertia.visit(route('home', query), {
+        method: 'get',
+        preserveState: true,
+        preserveScroll: false,
+    })
+}
+
 </script>
 <template>
     <MainLayout>
 
-        <Head title="Home-App" />
+        <Head title="Home" />
 
         <section class="blog spad">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-4 col-md-5">
-                        <div class="blog__sidebar">
-                            <div class="blog__sidebar__search">
-                                <form action="#">
-                                    <input type="text" placeholder="Search...">
-                                    <button type="submit"><span class="icon_search"></span></button>
-                                </form>
-                            </div>
-                            <div class="blog__sidebar__item">
-                                <h4>Categories</h4>
-                                <ul>
-                                    <li><a href="#">All</a></li>
-                                    <li><a href="#">Beauty (20)</a></li>
-                                    <li><a href="#">Food (5)</a></li>
-                                    <li><a href="#">Life Style (9)</a></li>
-                                    <li><a href="#">Travel (10)</a></li>
-                                </ul>
-                            </div>
-                            <div class="blog__sidebar__item">
-                                <h4>Recent News</h4>
-                                <div class="blog__sidebar__recent">
-                                    <a href="#" class="blog__sidebar__recent__item">
-                                        <div class="blog__sidebar__recent__item__pic">
-                                            <img src="/blog/sidebar/sr-1.jpg" alt="">
-                                        </div>
-                                        <div class="blog__sidebar__recent__item__text">
-                                            <h6>09 Kinds Of Vegetables<br /> Protect The Liver</h6>
-                                            <span>MAR 05, 2019</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="blog__sidebar__recent__item">
-                                        <div class="blog__sidebar__recent__item__pic">
-                                            <img src="/blog/sidebar/sr-2.jpg" alt="">
-                                        </div>
-                                        <div class="blog__sidebar__recent__item__text">
-                                            <h6>Tips You To Balance<br /> Nutrition Meal Day</h6>
-                                            <span>MAR 05, 2019</span>
-                                        </div>
-                                    </a>
-                                    <a href="#" class="blog__sidebar__recent__item">
-                                        <div class="blog__sidebar__recent__item__pic">
-                                            <img src="/blog/sidebar/sr-3.jpg" alt="">
-                                        </div>
-                                        <div class="blog__sidebar__recent__item__text">
-                                            <h6>4 Principles Help You Lose <br />Weight With Vegetables</h6>
-                                            <span>MAR 05, 2019</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="blog__sidebar__item">
-                                <h4>Search By</h4>
-                                <div class="blog__sidebar__item__tags">
-                                    <a href="#">Apple</a>
-                                    <a href="#">Beauty</a>
-                                    <a href="#">Vegetables</a>
-                                    <a href="#">Fruit</a>
-                                    <a href="#">Healthy Food</a>
-                                    <a href="#">Lifestyle</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <SearchSidebar :categories=categories></SearchSidebar>
 
                     <div class="col-lg-8 col-md-7">
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <!-- <div class="blog__item">
-                                    <div class="blog__item__pic">
-                                        <img src="/blog/blog-2.jpg" alt="">
-                                    </div>
-                                    <div class="blog__item__text">
-                                        <ul>
-                                            <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                            <li><i class="fa fa-comment-o"></i> 5</li>
-                                        </ul>
-                                        <h5><a href="#">6 ways to prepare breakfast for 30</a></h5>
-                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam
-                                            quaerat </p>
-                                        <a href="#" class="blog__btn">READ MORE <span class="arrow_right"></span></a>
-                                    </div>
-                                </div> -->
-                                <FoodItem></FoodItem>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
+                            <div v-for="(food, index) in foods.data" class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="blog__item">
                                     <div class="blog__item__pic">
-                                        <img src="/blog/blog-3.jpg" alt="">
+                                        <img :src="'/images/' + food.image_path" :alt=food.name height="200"
+                                            width="200">
                                     </div>
                                     <div class="blog__item__text">
                                         <ul>
-                                            <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                            <li><i class="fa fa-comment-o"></i> 5</li>
+                                            <li><i class="fa fa-calendar-o"></i> {{ format_date(food.created_at) }}</li>
+                                            <li><i class="fa fa-bell-o"></i> {{ food.count }}</li>
                                         </ul>
-                                        <h5><a href="#">Visit the clean farm in the US</a></h5>
-                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam
-                                            quaerat </p>
-                                        <a href="#" class="blog__btn">READ MORE <span class="arrow_right"></span></a>
+                                        <h5><Link :href="route('blog.food', { 'food_id': food.id })">{{ food.name }}</Link></h5>
+                                        <p>{{ food.description }}</p>
+                                        <Link class="blog__btn" :href="route('blog.food', { 'food_id': food.id })">
+                                            <span>READ MORE <i class="fa fa-thin fa-arrow-right"></i></span>
+                                        </Link>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <div class="blog__item">
-                                    <div class="blog__item__pic">
-                                        <img src="/blog/blog-1.jpg" alt="">
-                                    </div>
-                                    <div class="blog__item__text">
-                                        <ul>
-                                            <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                            <li><i class="fa fa-comment-o"></i> 5</li>
-                                        </ul>
-                                        <h5><a href="#">Cooking tips make cooking simple</a></h5>
-                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam
-                                            quaerat </p>
-                                        <a href="#" class="blog__btn">READ MORE <span class="arrow_right"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <div class="blog__item">
-                                    <div class="blog__item__pic">
-                                        <img src="/blog/blog-4.jpg" alt="">
-                                    </div>
-                                    <div class="blog__item__text">
-                                        <ul>
-                                            <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                            <li><i class="fa fa-comment-o"></i> 5</li>
-                                        </ul>
-                                        <h5><a href="#">Cooking tips make cooking simple</a></h5>
-                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam
-                                            quaerat </p>
-                                        <a href="#" class="blog__btn">READ MORE <span class="arrow_right"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <div class="blog__item">
-                                    <div class="blog__item__pic">
-                                        <img src="/blog/blog-4.jpg" alt="">
-                                    </div>
-                                    <div class="blog__item__text">
-                                        <ul>
-                                            <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                            <li><i class="fa fa-comment-o"></i> 5</li>
-                                        </ul>
-                                        <h5><a href="#">The Moment You Need To Remove Garlic From The Menu</a></h5>
-                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam
-                                            quaerat </p>
-                                        <a href="#" class="blog__btn">READ MORE <span class="arrow_right"></span></a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6">
-                                <div class="blog__item">
-                                    <div class="blog__item__pic">
-                                        <img src="/blog/blog-6.jpg" alt="">
-                                    </div>
-                                    <div class="blog__item__text">
-                                        <ul>
-                                            <li><i class="fa fa-calendar-o"></i> May 4,2019</li>
-                                            <li><i class="fa fa-comment-o"></i> 5</li>
-                                        </ul>
-                                        <h5><a href="#">Cooking tips make cooking simple</a></h5>
-                                        <p>Sed quia non numquam modi tempora indunt ut labore et dolore magnam aliquam
-                                            quaerat </p>
-                                        <a href="#" class="blog__btn">READ MORE <span class="arrow_right"></span></a>
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="col-lg-12">
-                                <div class="product__pagination blog__pagination">
-                                    <a href="#">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                                <div v-if="(foods.total > foods.per_page)" class="align-items-center d-flex">
+                                    <p class="mr-auto">
+                                        <span class="text-muted">Showing {{ foods.from }} to {{ foods.to }} of
+                                            {{ foods.total }} results</span>
+                                    </p>
+                                    <div class="">
+                                        <paginate :v-model="foods.current_page"
+                                            :page-count="getPageCount(foods.total, foods.per_page)"
+                                            :container-class="'pagination justify-content-end pt-1'" :prev-text="prev"
+                                            :next-text="next" :click-handler="clickCallback" :page-class="'page-item'"
+                                            :page-link-class="'page-link'" :prev-class="'prev-item'"
+                                            :prev-link-class="'page-link prev-link-item'" :next-class="'next-item'"
+                                            :next-link-class="'page-link next-link-item'"
+                                            :break-view-class="'break-view'" :break-view-link-class="'break-view-link'"
+                                            :first-last-button="false">
+                                        </paginate>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -200,3 +112,64 @@ defineProps({
 
     </MainLayout>
 </template>
+<style>
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #7fad39;
+    border-color: #7fad39;
+}
+
+.page-link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #b2b2b2;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.page-link:hover {
+    z-index: 2;
+    text-decoration: none;
+    color: #fff;
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+.blog__sidebar__search {
+    margin-bottom: 50px;
+}
+
+.blog__sidebar__search {
+    position: relative;
+}
+
+.blog__sidebar__search input {
+    width: 100%;
+    height: 46px;
+    font-size: 16px;
+    color: #6f6f6f;
+    padding-left: 15px;
+    border: 1px solid #e1e1e1;
+    border-radius: 20px;
+}
+
+.blog__sidebar__search input::placeholder {
+    color: #6f6f6f;
+}
+
+.blog__sidebar__search button {
+    font-size: 16px;
+    color: #6f6f6f;
+    background: transparent;
+    border: none;
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    padding: 0px 18px;
+}
+</style>

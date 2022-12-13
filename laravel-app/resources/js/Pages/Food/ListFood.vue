@@ -27,7 +27,6 @@ onMounted(() => {
 });
 
 const searchFood = () => {
-    console.log('searchFood', filter.value);
     Inertia.get(route('foods.index', { 'filter': filter.value }))
 }
 
@@ -56,7 +55,13 @@ const deleteFood = () => {
 
 //When next page
 const clickCallback = function (pageNum) {
-    this.$inertia.visit(route('foods.index', { 'page': pageNum }), {
+    var params = {
+        'page': pageNum
+    }
+    if (route().params.filter) {
+        params.filter = route().params.filter
+    }
+    this.$inertia.visit(route('foods.index', params), {
         method: 'get',
         preserveState: true,
         preserveScroll: true,

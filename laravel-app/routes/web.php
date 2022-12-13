@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ProfilesController;
+use App\Http\Controllers\BlogsController;
 use Illuminate\Foundation\Application;
 use Inertia\Inertia;
 
@@ -42,6 +43,7 @@ Route::middleware('auth')->group(function(){
 
 // /**FE use vuejs */
 Route::get('/',[PagesController::class,'index'])->name('home');
+Route::get('/blog/food/{food_id}',[BlogsController::class,'index'])->name('blog.food');
 
 require __DIR__.'/auth.php';
 

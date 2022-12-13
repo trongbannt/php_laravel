@@ -2351,10 +2351,6 @@ ol {
   Blog Sidebar
 -----------------------*/
 
-.blog__sidebar {
-	padding-top: 50px;
-}
-
 .blog__sidebar__item {
 	margin-bottom: 50px;
 }
@@ -2384,7 +2380,7 @@ ol {
 	color: #7fad39;
 }
 
-.blog__sidebar__search {
+/* .blog__sidebar__search {
 	margin-bottom: 50px;
 }
 
@@ -2416,7 +2412,7 @@ ol {
 	top: 0;
 	height: 100%;
 	padding: 0px 18px;
-}
+} */
 
 .blog__sidebar__recent .blog__sidebar__recent__item {
 	display: block;
@@ -3464,4 +3460,7 @@ ol {
 	.blog__details__hero__text h2 {
 		font-size: 24px;
 	}
+
+
+	
 }

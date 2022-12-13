@@ -3,17 +3,50 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Food;
+use App\Models\Category;
 use Throwable;
 use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+use Illuminate\Pagination\Paginator;
+use App\Utilities\Constants;
+use App\Http\Service\CategoryService;
 
 class PagesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Index');
+        $currentPage = 1;
+        $category_id = "";
+        $filter = "";
+        $query = Food::query();
+        if ($request->has('page')) {
+            // You can set this to any page you want to paginate to
+            $currentPage = $request->query('page');
+        }
+
+        // Make sure that you call the static method currentPageResolver()
+        // before querying users
+        Paginator::currentPageResolver(function () use ($currentPage) {
+            return $currentPage;
+        });
+
+        if ($request->has('filter')) {
+            $filter = $request->query('filter');
+            $query = $query->where('name', 'like', "%" . $filter . "%");
+        }
+
+        if ($request->has('category')) {
+            $category_id = $request->query('category');
+            $query = $query->where('category_id', $category_id);
+        }
+
+        $foodsPaging = $query->orderByDesc('updated_at')
+                            ->orderByDesc('created_at')
+                            ->Paginate(Constants::PAGE_SIZE_HOME);
+
+        $categories = CategoryService::getCategories();
+        return Inertia::render('Index', ['foods' => $foodsPaging, 'categories' => $categories]);
     }
 
     public function about()
@@ -36,36 +69,9 @@ class PagesController extends Controller
 
         $data_3 = $data_1->union($data_2);
 
-         //dd($data);
+        //dd($data);
 
         //return Inertia::render('About', ['data' => $data]);
-        return response()->json(['data_1' => $data_1,'data_2' => $data_2,'data3' => $data_3]);
-    }
-
-    public function login(Request $request)
-    {
-        try {
-            return response()->json(['res' => $request]);
-
-            $remember = false;
-            $credentials = $request->validate([
-                'email' => ['required', 'email'],
-                'password' => ['required', 'min:8'],
-            ]);
-
-            if (Auth::attempt($credentials, $remember)) {
-                $request->session()->regenerate();
-
-                return redirect()->intended('/');
-            }
-
-            return back()->withErrors([
-                'email' => 'The provided credentials do not match our records.',
-            ])->onlyInput('email');
-        } catch (Throwable $exception) {
-
-            Log::channel('log_app')->error($exception->getMessage());
-            throw $exception;
-        }
+        return response()->json(['data_1' => $data_1, 'data_2' => $data_2, 'data3' => $data_3]);
     }
 }
