@@ -55,7 +55,7 @@ const clickCallback = function (pageNum) {
     <MainLayout>
 
         <Head title="Home" />
-
+   
         <section class="blog spad">
             <div class="container">
                 <div class="row">

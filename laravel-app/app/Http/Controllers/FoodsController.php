@@ -11,6 +11,10 @@ use Illuminate\Pagination\Paginator;
 use App\Utilities\Constants;
 use App\Http\Service\CategoryService;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
+
 
 class FoodsController extends Controller
 {
@@ -20,7 +24,7 @@ class FoodsController extends Controller
         try {
 
             $currentPage = 1;
-            $query= Food::with('category:id,name');
+            $query = Food::with('category:id,name');
             if ($request->has('page')) {
                 // You can set this to any page you want to paginate to
                 $currentPage = $request->query('page');
@@ -39,8 +43,8 @@ class FoodsController extends Controller
             }
 
             $foodsPaging = $query->orderByDesc('updated_at')
-                                ->orderByDesc('created_at')
-                                ->Paginate(Constants::PAGE_SIZE);
+                ->orderByDesc('created_at')
+                ->Paginate(Constants::PAGE_SIZE);
 
             return Inertia::render('Food/ListFood', ['foods' => $foodsPaging]);
             //return view('foods.index', ['foods' => $foodsPaging]);
@@ -52,8 +56,10 @@ class FoodsController extends Controller
         }
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $this->authorize('create',Food::class);
+
         $categories = CategoryService::getCategories();
 
         return Inertia::render('Food/CreateFood', ['categories' => $categories]);
@@ -63,13 +69,15 @@ class FoodsController extends Controller
     public function store(Request $request)
     {
         try {
+            
+            $this->authorize('create',Food::class);
+
             // validate data request
             $request->validate([
-                "name" => "required|unique:foods|max:255",
-                "count" => "required|integer|min:0|max:1000",
-                "category_id" => "required",
-                //'image' => 'required|mimes:jpg,png,jpeg|max:5048'
-                'image' => 'required|image|max:5048'
+                "name" => ['required', 'max:255', Rule::unique(Food::class)],
+                "count" => ['required', 'integer', 'min:0', 'max:1000'],
+                "category_id" => ['required'],
+                'image' => ['required', 'image', 'max:5048']
             ]);
 
             // //client image's name and server's image name
@@ -117,16 +125,15 @@ class FoodsController extends Controller
         try {
 
             $food = Food::findOrFail($id);
-            $image_path = "";
+            $image_path  = $request->image_path;
             if ($request->hasFile('image')) {
                 // validate data request if has file image
                 $request->validate([
-                    "name" => "required|unique:foods,name," . $food->id . "id|max:255",
-                    "count" => "required|integer|min:0|max:1000",
-                    "category_id" => "required",
+                    "name" => ['required', 'max:255', Rule::unique(Food::class)->ignore($food->id)],
+                    "count" => ['required', 'integer', 'min:0', 'max:1000'],
+                    "category_id" => ['required'],
                     //Validate image
-                    // 'image' => 'required|mimes:jpg,png,jpeg|max:5048'
-                    'image' => 'required|image|max:5048'
+                    'image' => ['required', 'image', 'max:5048']
                 ]);
 
                 //client image's name and server's image name
@@ -135,33 +142,20 @@ class FoodsController extends Controller
             } else {
                 // validate data request if has not file image
                 $request->validate([
-                    "name" => "required|unique:foods,name," . $food->id . "id|max:255",
-                    "count" => "required|integer|min:0|max:1000",
-                    "category_id" => "required",
+                    "name" => ['required', 'max:255', Rule::unique(Food::class)->ignore($food->id)],
+                    "count" => ['required', 'integer', 'min:0', 'max:1000'],
+                    "category_id" => ['required'],
                 ]);
-
-                $image_path  = $request->image_path;
             }
 
-            Food::where('id', $id)
-                ->update([
-                    'name' => $request->name,
-                    'count' => $request->count,
-                    'category_id' => $request->category_id,
-                    'description' => $request->description,
-                    'image_path' => $image_path,
-                    'updated_at' => now(),
-                ]);
+            $food->name = $request->name;
+            $food->count = $request->count;
+            $food->category_id = $request->category_id;
+            $food->description = $request->description;
+            $food->image_path = $image_path;
+            $food->save();
 
-            Log::channel('log_app')->info('UPDATED', ['Food' => [
-                'id' => $id,
-                'name' => $request->name,
-                'count' => $request->count,
-                'category_id' => $request->category_id,
-                'description' => $request->description,
-                'image_path' => $image_path,
-                'updated_at' => now(),
-            ]]);
+            Log::channel('log_app')->info('UPDATED', ['Food' => $food]);
 
             return Redirect('/foods')->with(Constants::MESSAGE, "Modify food success!");
         } catch (Throwable $exception) {

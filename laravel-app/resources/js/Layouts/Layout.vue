@@ -1,7 +1,6 @@
 <script setup>
 import { Link } from '@inertiajs/inertia-vue3';
 
-
 </script>
 
 <template>
@@ -28,7 +27,6 @@ import { Link } from '@inertiajs/inertia-vue3';
                             <Link class="nav-link" :href="route('about')" :class="{ 'active': $page.url === '/about' }"> About</Link>
                         </li>
                     </ul>
-
                     <ul class="navbar-nav">
                         <li class="nav-item dropdown mr-auto" v-if="$page.props.auth.user">
                             <a class="nav-link dropdown-toggle active"  id="navbarDropdown" role="button"

@@ -9,7 +9,7 @@ import InputLable from '@/Components/InputLabel.vue';
 const notification = ref(false);
 
 const props = defineProps({
-    categories: [],
+    categories: {},
 });
 
 const form = useForm({

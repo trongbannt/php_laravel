@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Food;
-use App\Models\Category;
-use Throwable;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Pagination\Paginator;
 use App\Utilities\Constants;
 use App\Http\Service\CategoryService;
+use Illuminate\Support\Facades\Auth;
 
 class PagesController extends Controller
 {
@@ -20,6 +18,7 @@ class PagesController extends Controller
         $category_id = "";
         $filter = "";
         $query = Food::query();
+       
         if ($request->has('page')) {
             // You can set this to any page you want to paginate to
             $currentPage = $request->query('page');
