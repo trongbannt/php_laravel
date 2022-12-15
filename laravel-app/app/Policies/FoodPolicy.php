@@ -12,6 +12,23 @@ class FoodPolicy
 {
     use HandlesAuthorization;
 
+
+    /**
+     * Perform pre-authorization checks.
+     *
+     * @param  \App\Models\User  $user
+     * @param  string  $ability
+     * @return void|bool
+     */
+    public function before(User $user, $ability)
+    {
+        if ($user->isAdministrator()) {
+            return true;
+        }
+    }
+
+
+
     /**
      * Determine whether the user can view any models.
      *
@@ -43,11 +60,9 @@ class FoodPolicy
      */
     public function create(User $user)
     {
-        //dd($user->userRoles()->get());
-        $role = [Role::Administrator->value, Role::Staff->value];
-        $userRole = $user->userRoles()->whereIn('role_id', $role)->exists();
-        //dd($userRole);
-        return $userRole ? Response::allow() : Response::denyAsNotFound();
+        $role = Role::Creator->value;
+        $allow = $user->userRoles()->where('role_id', $role)->count() > 0 ? true : false;
+        return $allow ? Response::allow() : Response::deny();
     }
 
     /**
@@ -57,11 +72,11 @@ class FoodPolicy
      * @param  \App\Models\Food  $food
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Food $food)
+    public function update(User $user)
     {
-        $role = [Role::Administrator->value, Role::Staff->value];
-        $userRole = $user->userRoles()->whereIn('role_id', $role)->exists();
-        return $userRole ? Response::allow() : Response::denyAsNotFound();
+        $role = Role::Editor->value;
+        $allow = $user->userRoles()->where('role_id', $role)->count() > 0 ? true : false;
+        return $allow ? Response::allow() : Response::deny();
     }
 
     /**
@@ -71,11 +86,11 @@ class FoodPolicy
      * @param  \App\Models\Food  $food
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Food $food)
+    public function delete(User $user)
     {
-         $role = [Role::Administrator->value];
-         $userRole = $user->userRoles()->whereIn('role_id', $role)->exists();
-         return $userRole ? Response::allow() : Response::denyAsNotFound();
+        $role = Role::Deleter->value;
+        $allow = $user->userRoles()->where('role_id', $role)->count() > 0 ? true : false;
+        return $allow ? Response::allow() : Response::deny();
     }
 
     /**

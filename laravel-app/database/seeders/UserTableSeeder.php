@@ -39,5 +39,19 @@ class UserTableSeeder extends Seeder
             'password'   =>  Hash::make('12345678'),
             'remember_token' =>   Str::random(10),
         ]);
+
+        User::create([
+            'name'    => 'user004',
+            'email'    => 'user004@gmail.com',
+            'password'   =>  Hash::make('12345678'),
+            'remember_token' =>   Str::random(10),
+        ]);
+
+        User::create([
+            'name'    => 'user005',
+            'email'    => 'user005@gmail.com',
+            'password'   =>  Hash::make('12345678'),
+            'remember_token' =>   Str::random(10),
+        ]);
     }
 }

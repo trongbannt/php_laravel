@@ -45,6 +45,16 @@ import { Link } from '@inertiajs/inertia-vue3';
                                 <!--end logout -->
                             </div>
                         </li>
+                        <li class="nav-item dropdown mr-auto" v-if="$page.props.auth.user">
+                            <a class="nav-link dropdown-toggle active"  id="navbarDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span><i class=" fa fa-solid fa-gears"></i> Roles</span>
+
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <span class="dropdown-item" v-for="item in $page.props.auth.role">{{item.name}}</span>
+                            </div>
+                        </li>
                         <!-- not yet login -->
                         <li class="nav-item dropdown" v-if="!$page.props.auth.user">
                             <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button"
@@ -78,5 +88,11 @@ import { Link } from '@inertiajs/inertia-vue3';
 <style>
 .nav-link{
     margin-top: 0.15rem !important;
+}
+
+.dropdown-item.active, .dropdown-item:active {
+    color: #16181b;
+    text-decoration: none;
+    background-color: #e9ecef;
 }
 </style>

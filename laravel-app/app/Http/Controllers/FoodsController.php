@@ -58,6 +58,7 @@ class FoodsController extends Controller
 
     public function create(Request $request)
     {
+        
         $this->authorize('create',Food::class);
 
         $categories = CategoryService::getCategories();
@@ -109,6 +110,7 @@ class FoodsController extends Controller
     public function edit($id)
     {
         try {
+            $this->authorize('update',Food::class);
             $foodEdit = Food::findOrFail($id);
             $categories =  CategoryService::getCategories();
 
@@ -123,7 +125,7 @@ class FoodsController extends Controller
     public function update(Request $request, $id)
     {
         try {
-
+            $this->authorize('update',Food::class);
             $food = Food::findOrFail($id);
             $image_path  = $request->image_path;
             if ($request->hasFile('image')) {
@@ -168,6 +170,8 @@ class FoodsController extends Controller
     public function destroy($id)
     {
         try {
+            
+            $this->authorize('delete',Food::class);
             $foodDelete = Food::findOrFail($id);
             $foodDelete->delete();
             Log::channel('log_app')->info('DELETED', ['Food' => $foodDelete]);

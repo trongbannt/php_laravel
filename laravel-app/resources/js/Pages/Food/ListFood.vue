@@ -5,13 +5,13 @@ import { Head, Link, usePage } from '@inertiajs/inertia-vue3';
 import Paginate from 'vuejs-paginate-next';
 import { ref, onMounted } from 'vue';
 import { Inertia } from '@inertiajs/inertia';
-import { Role } from '@/Utilities/Constants.js';
+import { checkAllowActive } from '@/Utilities/Helper.js';
 
 const notification = ref(false);
 const confirmingUserDeletion = ref(false);
 const foodDelete = ref(null);
 const filter = ref(null);
-const roleUser = usePage().props.value.auth.role;
+const userRoles = usePage().props.value.auth.role;
 
 defineProps({
     foods: {},
@@ -109,8 +109,8 @@ const getPageCount = (total, pageSize) => {
 
             <div class="d-flex flex-row mb-3">
                 <div class="mr-auto">
-                    <Link v-if="roleUser.find(item => [Role.Staff, Role.Administrator].includes(item.role_id))"
-                        :href="route('foods.create')" type="button" class="btn btn-primary">Add food</Link>
+                    <Link v-if="checkAllowActive(userRoles, 'Add_Food')" :href="route('foods.create')" type="button"
+                        class="btn btn-primary">Add food</Link>
                 </div>
                 <div>
                     <div class="input-group">
@@ -152,16 +152,15 @@ const getPageCount = (total, pageSize) => {
                             <td>{{ food.description }}</td>
                             <td>{{ food.category.name }}</td>
                             <td class="text-right" style="padding-right: 0">
-                                <Link
-                                    v-if="roleUser.find(item => [Role.Staff, Role.Administrator].includes(item.role_id))"
+                                <Link v-if="checkAllowActive(userRoles, 'Edit_Food')"
                                     :href="(route('foods.edit', { 'id': food.id }))" class="btn btn-primary">
                                 Edit
                                 </Link>
                             </td>
                             <td class="text-left">
-                                <a v-if="roleUser.find(item => [Role.Administrator].includes(item.role_id))"
-                                    class="btn btn-danger delete_food " @click="confirmUserDeletion(food.id)"
-                                    data-toggle="modal" data-target="#exampleModal">
+                                <a v-if="checkAllowActive(userRoles, 'Delete_Food')" class="btn btn-danger delete_food "
+                                    @click="confirmUserDeletion(food.id)" data-toggle="modal"
+                                    data-target="#exampleModal">
                                     Delete
                                 </a>
                             </td>
