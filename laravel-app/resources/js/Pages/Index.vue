@@ -94,9 +94,9 @@ const clickCallback = function (pageNum) {
                                             :page-count="getPageCount(foods.total, foods.per_page)"
                                             :container-class="'pagination justify-content-end pt-1'" :prev-text="prev"
                                             :next-text="next" :click-handler="clickCallback" :page-class="'page-item'"
-                                            :page-link-class="'page-link'" :prev-class="'prev-item'"
-                                            :prev-link-class="'page-link prev-link-item'" :next-class="'next-item'"
-                                            :next-link-class="'page-link next-link-item'"
+                                            :page-link-class="'page-link-f'" :prev-class="'prev-item'"
+                                            :prev-link-class="'page-link-f prev-link-item'" :next-class="'next-item'"
+                                            :next-link-class="'page-link-f next-link-item'"
                                             :break-view-class="'break-view'" :break-view-link-class="'break-view-link'"
                                             :first-last-button="false">
                                         </paginate>
@@ -113,7 +113,7 @@ const clickCallback = function (pageNum) {
     </MainLayout>
 </template>
 <style>
-.page-item.active .page-link {
+/* .page-item.active .page-link {
     z-index: 3;
     color: #fff;
     background-color: #7fad39;
@@ -137,7 +137,7 @@ const clickCallback = function (pageNum) {
     color: #fff;
     background-color: #e9ecef;
     border-color: #dee2e6;
-}
+} */
 
 .blog__sidebar__search {
     margin-bottom: 50px;

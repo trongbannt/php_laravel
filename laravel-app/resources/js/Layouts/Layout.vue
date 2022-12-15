@@ -8,7 +8,7 @@ import { Link } from '@inertiajs/inertia-vue3';
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark" 
             style="background-color: #7fad39 !important;">
             <div class="container container-fluid">
-                <a class="navbar-brand active" href="/">Home</a>
+                <a class="navbar-brand active" href="/"><i class="fa fa-home" aria-hidden="true"></i> Home</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -18,13 +18,13 @@ import { Link } from '@inertiajs/inertia-vue3';
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item" v-if="$page.props.auth.user">
-                            <a class="nav-link "  href="/posts">Posts</a>
+                            <a class="nav-link "  href="/posts"><i class="fa fa-rss" aria-hidden="true"></i> Posts</a>
                         </li>
                         <li class="nav-item" v-if="$page.props.auth.user">
-                            <Link class="nav-link" :href="route('foods.index')" :class="{ 'active': $page.url.startsWith('/foods') }">Foods</Link>
+                            <Link class="nav-link" :href="route('foods.index')" :class="{ 'active': $page.url.startsWith('/foods') }"><i class="fa fa-cutlery" aria-hidden="true"></i> Foods</Link>
                         </li>
                         <li class="nav-item">
-                            <Link class="nav-link" :href="route('about')" :class="{ 'active': $page.url === '/about' }"> About</Link>
+                            <Link class="nav-link" :href="route('contact')" :class="{ 'active': $page.url.startsWith('/contact') }"><i class="fa fa-compress" aria-hidden="true"></i> Contact</Link>
                         </li>
                     </ul>
                     <ul class="navbar-nav">
@@ -32,16 +32,17 @@ import { Link } from '@inertiajs/inertia-vue3';
                             <a class="nav-link dropdown-toggle active"  id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span>
-                                    <i class="bi bi-person-fill-gear" style="font-size: 0.75rem; color:#ffff"></i>
+                                    <!-- <i class="bi bi-person-fill-gear" style="font-size: 0.75rem; color:#ffff"></i> -->
+                                    <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>
                                     <!-- Show user name  -->
                                     {{ $page.props.auth.user.name }}        
                                 </span>
 
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <Link class="dropdown-item" :href="route('profile.edit')">Profile</Link>
+                                <Link class="dropdown-item" :href="route('profile.edit')"><i class="fa fa-user" aria-hidden="true"></i> Profile</Link>
                                 <!-- logout -->
-                                <Link method="POST" class="dropdown-item" as="button" type="button" :href="route('logout')">Logout</Link>
+                                <Link method="POST" class="dropdown-item" as="button" type="button" :href="route('logout')"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</Link>
                                 <!--end logout -->
                             </div>
                         </li>
@@ -59,7 +60,7 @@ import { Link } from '@inertiajs/inertia-vue3';
                         <li class="nav-item dropdown" v-if="!$page.props.auth.user">
                             <a class="nav-link dropdown-toggle"  id="navbarDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="bi bi-person-fill-gear" style="font-size: 0.75rem; color:#ffff"></i>
+                                <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i> 
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <Link class="dropdown-item" :href="route('login')">Login</Link>

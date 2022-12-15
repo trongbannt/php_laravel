@@ -73,4 +73,9 @@ class PagesController extends Controller
         //return Inertia::render('About', ['data' => $data]);
         return response()->json(['data_1' => $data_1, 'data_2' => $data_2, 'data3' => $data_3]);
     }
+
+    public  function contact()
+    {
+       return Inertia::render("Contact");
+    }
 }

@@ -21,10 +21,10 @@ use Inertia\Inertia;
 */
 
 
-Route::get("/about", [
+Route::get("/contact", [
     PagesController::class,
-    'about'
-])->name('about');
+    'contact'
+])->name('contact');
 
 
 /*Posts */

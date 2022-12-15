@@ -170,7 +170,7 @@ class FoodsController extends Controller
     public function destroy($id)
     {
         try {
-            
+
             $this->authorize('delete',Food::class);
             $foodDelete = Food::findOrFail($id);
             $foodDelete->delete();
@@ -185,7 +185,7 @@ class FoodsController extends Controller
     public function show($id)
     {
         try {
-            $food = Food::with('category:name')->findOrFail($id);
+            $food = Food::with('category:id,name')->findOrFail($id);
             return Inertia::render('Food/ShowFood', ['food' => $food]);
             // return view('foods.detail')->with('food', $food);
         } catch (Throwable $exception) {

@@ -110,7 +110,7 @@ const getPageCount = (total, pageSize) => {
             <div class="d-flex flex-row mb-3">
                 <div class="mr-auto">
                     <Link v-if="checkAllowActive(userRoles, 'Add_Food')" :href="route('foods.create')" type="button"
-                        class="btn btn-primary">Add food</Link>
+                        class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Add food</Link>
                 </div>
                 <div>
                     <div class="input-group">
@@ -149,19 +149,19 @@ const getPageCount = (total, pageSize) => {
                                 <Link :href="(route('foods.show', { 'id': food.id }))">{{ food.name }}</Link>
                             </td>
                             <td>{{ food.count }}</td>
-                            <td>{{ food.description }}</td>
+                            <td class='text-justify'>{{ food.description }}</td>
                             <td>{{ food.category.name }}</td>
                             <td class="text-right" style="padding-right: 0">
-                                <Link v-if="checkAllowActive(userRoles, 'Edit_Food')"
-                                    :href="(route('foods.edit', { 'id': food.id }))" class="btn btn-primary">
-                                Edit
+                                <Link v-if="checkAllowActive(userRoles, 'Edit_Food')" class="btn btn-success"
+                                    :href="(route('foods.edit', { 'id': food.id }))" >
+                                    <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
                                 </Link>
                             </td>
                             <td class="text-left">
-                                <a v-if="checkAllowActive(userRoles, 'Delete_Food')" class="btn btn-danger delete_food "
+                                <a v-if="checkAllowActive(userRoles, 'Delete_Food')" class="btn btn-danger delete_food"
                                     @click="confirmUserDeletion(food.id)" data-toggle="modal"
                                     data-target="#exampleModal">
-                                    Delete
+                                    <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
                                 </a>
                             </td>
                         </tr>
@@ -175,9 +175,9 @@ const getPageCount = (total, pageSize) => {
                 <div class="align-self-center">
                     <paginate :v-model="foods.current_page" :page-count="getPageCount(foods.total, foods.per_page)"
                         :container-class="'pagination justify-content-end pt-1'" :prev-text="prev" :next-text="next"
-                        :click-handler="clickCallback" :page-class="'page-item'" :page-link-class="'page-link'"
-                        :prev-class="'prev-item'" :prev-link-class="'page-link prev-link-item'"
-                        :next-class="'next-item'" :next-link-class="'page-link next-link-item'"
+                        :click-handler="clickCallback" :page-class="'page-item'" :page-link-class="'page-link-f'"
+                        :prev-class="'prev-item'" :prev-link-class="'page-link-f prev-link-item'"
+                        :next-class="'next-item'" :next-link-class="'page-link-f next-link-item'"
                         :break-view-class="'break-view'" :break-view-link-class="'break-view-link'"
                         :first-last-button="false">
                     </paginate>
