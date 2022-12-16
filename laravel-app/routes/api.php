@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\BlogsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +24,13 @@ Route::get("/about", [
     PagesController::class,
     'about'
 ])->name('about');
+
+Route::post("/blog/upload_image", [
+    BlogsController::class,
+    'uploadImage'
+])->name('blog.uploadImage');
+
+Route::get("/blog/test_api", [
+    BlogsController::class,
+    'testApi'
+])->name('blog.test_api');

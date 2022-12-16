@@ -15,7 +15,7 @@ defineProps({
 <template>
     <MainLayout>
 
-        <Head title="Home" />
+        <Head title="Blog detail" />
 
         <section class="blog spad">
             <div class="container">

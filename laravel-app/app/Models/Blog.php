@@ -11,6 +11,8 @@ class Blog extends Model
 
     protected $table = "blogs";
     protected $primaryKey = "id";
+    protected  $fillable =["name","food_id", "content","created_at","updated_at"];
+
 
     public function blogImages()
     {

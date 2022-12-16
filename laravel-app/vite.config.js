@@ -26,6 +26,7 @@ export default defineConfig({
             '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
             '~fontawesome': path.resolve(__dirname, 'node_modules/font-awesome/scss'),
              //'~fa': path.resolve(__dirname, 'node_modules/@fortawesome/fontawesome-free/scss'),
+             
         }
     },
 });

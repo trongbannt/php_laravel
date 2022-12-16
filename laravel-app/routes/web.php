@@ -39,6 +39,8 @@ Route::middleware('auth')->group(function(){
     Route::delete('/profile', [ProfilesController::class, 'destroy'])->name('profile.destroy');
     Route::resource('/foods',FoodsController::class);
     Route::resource('/posts', PostsController::class);
+    Route::get('/foods/{food_id}/blog/create',[BlogsController::class,'create'])->name('blog.create');
+    Route::post('/foods/{food_id}/blog/create',[BlogsController::class,'save'])->name('blog.save');
 });
 
 // /**FE use vuejs */

@@ -25,7 +25,7 @@ const form = useForm({
 });
 
 onUpdated(() => {
-    if (usePage().props.value.flash.message) {
+    if (usePage().props.value.flash.success) {
         notification.value = true;
         setTimeout(function () {
             notification.value = false;
@@ -88,8 +88,7 @@ const updateImage = (e) => {
                     <div class="custom-file">
                         <label for="input_file_image" id="name_image" class="name-image-food">Choose file</label>
                         <input type="file" id="input_file_image" class="custom-file-input" name="image"
-                            @input="form.image = $event.target.files[0]" @change="updateImage"
-                            accept="image/*">
+                            @input="form.image = $event.target.files[0]" @change="updateImage" accept="image/*">
                     </div>
                 </div>
                 <InputError v-if="errors.image" :message="errors.image"></InputError>
@@ -113,13 +112,17 @@ const updateImage = (e) => {
                 </div>
 
                 <div class="form-group mb-3">
-                    <InputLable>Description</InputLable>
+                    <span>
+                        <InputLable>Description</InputLable>
+                        <Link :href="route('blog.create',{'food_id':props.food.id})" class="btn ml-1" value="">
+                        <span> <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Write Detail</span>
+                        </Link>
+                    </span>
                     <textarea class="form-control" id="description" name="description" rows="3"
                         placeholder="Enter food's description" v-model="form.description"></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary mb-3 mr-1"
-                    value="">Save</button>
+                <button type="submit" class="btn btn-primary mb-3 mr-1" value="">Save</button>
                 <Link :href="route('foods.index')" class="btn btn-secondary mb-3" value="">Back</Link>
             </form>
         </div>
