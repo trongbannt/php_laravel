@@ -1,0 +1,6 @@
+Key pair name: awsbuildon
+https://awsbuildnguyen.signin.aws.amazon.com/console
+
+user: nguyenban
+pass default: 123456Aa!@
+pass new: bannt@688
