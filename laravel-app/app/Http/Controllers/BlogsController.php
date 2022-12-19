@@ -57,6 +57,31 @@ class BlogsController extends Controller
         return response()->json($data);
     }
 
+    public function removeImage(Request $request)
+    {
+        $image = $request->image;
+        $index = stripos($image, "images");
+        if ($index < 0) {
+            $data = (object) [
+                "message" => "Don't get path image"
+            ];
+            return response()->json($data);
+        }
+
+        $image_path = substr($image, $index);
+        if (!unlink($image_path)) {
+            $data = (object) [
+                "message" => "The file " . $image_path . " does not exist"
+            ];
+            return response()->json($data);
+        }
+
+        $data = (object) [
+            "message" => "The file " . $image_path . " has been deleted"
+        ];
+        return response()->json($data);
+    }
+
     public function testApi(Request $request)
     {
 
@@ -87,18 +112,19 @@ class BlogsController extends Controller
         if ($request->has('id')) {
             // You can set this to any page you want to paginate to
             $blog_id = $request->id;
-            $blog = Blog::where($blog_id)->first();
+            $blog = Blog::findOrFail($blog_id);
             $blog->name = $request->name;
             $blog->content = $request->content;
             $blog->save();
-        } else {
-            $blog = Blog::create([
-                "name" => $request->name,
-                "food_id" => $request->food_id,
-                "content" => $request->content
-            ]);
-            $blog->save();
+            return back()->with(["success" => "Save content blog for product success"]);
         }
+
+        $blog = Blog::create([
+            "name" => $request->name,
+            "food_id" => $request->food_id,
+            "content" => $request->content
+        ]);
+        $blog->save();
 
         return back()->with(["success" => "Save content blog for product success"]);
     }

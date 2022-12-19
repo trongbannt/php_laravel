@@ -138,8 +138,9 @@ const getPageCount = (total, pageSize) => {
                             <th class="col-1" scope="col">Count</th>
                             <th class="col-3" scope="col">Description</th>
                             <th class="col-3" scope="col">Category</th>
-                            <th class="col-1" scope="col"></th>
-                            <th class="col-1 text-left" scope="col"></th>
+                            <!-- <th class="col-1" scope="col"></th> -->
+                            <th class="col-2" scope="col"></th>
+                            <!-- <th class="col-1 text-left" scope="col"></th> -->
                         </tr>
                     </thead>
                     <tbody>
@@ -151,19 +152,38 @@ const getPageCount = (total, pageSize) => {
                             <td>{{ food.count }}</td>
                             <td class='text-justify'>{{ food.description }}</td>
                             <td>{{ food.category.name }}</td>
-                            <td class="text-right" style="padding-right: 0">
-                                <Link v-if="checkAllowActive(userRoles, 'Edit_Food')" class="btn btn-success"
+                            <!-- <td class="text-right" style="padding-right: 0">
+                                <Link v-if="checkAllowActive(userRoles, 'Edit_Food')" class=""
                                     :href="(route('foods.edit', { 'id': food.id }))" >
-                                    <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                 </Link>
+                            </td> -->
+                            <td class="text-center">
+                                <span>
+                                    <Link v-if="checkAllowActive(userRoles, 'Edit_Food')" class="mr-3"
+                                        :href="(route('foods.edit', { 'id': food.id }))">
+                                    <i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+                                    </Link>
+
+                                    <Link  class=""
+                                        :href="(route('blog.create', { 'id': food.id }))">
+                                    <i class="fa fa-newspaper-o fa-lg" aria-hidden="true"></i>
+                                    </Link>
+
+                                    <a v-if="checkAllowActive(userRoles, 'Delete_Food')" class="ml-3"
+                                        @click="confirmUserDeletion(food.id)" data-toggle="modal"
+                                        data-target="#exampleModal">
+                                        <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                                    </a>
+                                </span>
                             </td>
-                            <td class="text-left">
-                                <a v-if="checkAllowActive(userRoles, 'Delete_Food')" class="btn btn-danger delete_food"
+                            <!-- <td class="text-left" style="padding-left: 0">
+                                <a v-if="checkAllowActive(userRoles, 'Delete_Food')" class=" delete_food"
                                     @click="confirmUserDeletion(food.id)" data-toggle="modal"
                                     data-target="#exampleModal">
                                     <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
                                 </a>
-                            </td>
+                            </td> -->
                         </tr>
                     </tbody>
                 </table>
@@ -211,3 +231,6 @@ const getPageCount = (total, pageSize) => {
         </Modal>
     </MainLayout>
 </template>
+<style>
+
+</style>

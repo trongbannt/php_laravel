@@ -30,6 +30,11 @@ Route::post("/blog/upload_image", [
     'uploadImage'
 ])->name('blog.uploadImage');
 
+Route::post("/blog/remove_image", [
+    BlogsController::class,
+    'removeImage'
+])->name('blog.removeImage');
+
 Route::get("/blog/test_api", [
     BlogsController::class,
     'testApi'
