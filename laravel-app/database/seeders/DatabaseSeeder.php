@@ -28,13 +28,13 @@ class DatabaseSeeder extends Seeder
         //disable foreign key check for this connection before running seeders
         // DB::statement('SET FOREIGN_KEY_CHECKS=0;');
 
-        DB::table('Posts')->delete();
+        DB::table('posts')->delete();
         \App\Models\Post::factory(50)->create();
 
         // $this->call('CategoriesTableSeeder');
         // $this->command->info('Categories table seeded');
 
-        DB::table('Categories')->delete();
+        DB::table('categories')->delete();
         $categories = [
             ['id' => 1, 'name' => 'Food of Japan', 'description' => 'Sushi,ramen,Sukiyaki,Onigiri ', 'created_at'=> now(),'updated_at'=> now()],
             ['id' => 2, 'name' => 'Food of Vietnam', 'description' => 'Pho, bun dau, nem ran','created_at'=> now(),'updated_at'=> now()],

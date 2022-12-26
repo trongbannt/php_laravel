@@ -4,3 +4,18 @@ https://awsbuildnguyen.signin.aws.amazon.com/console
 user: nguyenban
 pass default: 123456Aa!@
 pass new: bannt@688
+
+-----------------------------
+Serve: servebegin
+key pair name: servebegin
+Public DNS:
+user: Administrator
+pass: O=P2O.iBcFq!bTaK==)g6e26-*35F8SX
+-----------------------------
+
+-----------------------------
+Serve: serve_begin_tokyo
+key pair name: serve_begin_tokyo
+user: Administrator
+pass: 2UQ?My!f8=RgYY-b9)(65!N!EYsandPP
+-----------------------------
