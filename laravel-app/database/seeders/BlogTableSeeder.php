@@ -25,12 +25,12 @@ class BlogTableSeeder extends Seeder
         ];
         Blog::insert($blogs);
 
-        DB::table('blogImages')->delete();
-        $blogImages = [
-            ['id' => 1, 'name' => 'blog-1-image-1', 'blog_id' => 1, 'created_at' => now(), 'updated_at' => now(), 'order' => '1','image_path'=>'blog/details/detail-4.png'],
-            ['id' => 2, 'name' => 'blog-1-image-2', 'blog_id' => 1, 'created_at' => now(), 'updated_at' => now(), 'order' => '2','image_path'=>'blog/details/detail-3.png'],
-            ['id' => 3, 'name' => 'blog-2-image-1', 'blog_id' => 2, 'created_at' => now(), 'updated_at' => now(), 'order' => '1','image_path'=>'blog/details/detail-4.png'],
-        ];
-        BlogImage::insert($blogImages);
+        // DB::table('blogImages')->delete();
+        // $blogImages = [
+        //     ['id' => 1, 'name' => 'blog-1-image-1', 'blog_id' => 1, 'created_at' => now(), 'updated_at' => now(), 'order' => '1','image_path'=>'blog/details/detail-4.png'],
+        //     ['id' => 2, 'name' => 'blog-1-image-2', 'blog_id' => 1, 'created_at' => now(), 'updated_at' => now(), 'order' => '2','image_path'=>'blog/details/detail-3.png'],
+        //     ['id' => 3, 'name' => 'blog-2-image-1', 'blog_id' => 2, 'created_at' => now(), 'updated_at' => now(), 'order' => '1','image_path'=>'blog/details/detail-4.png'],
+        // ];
+        // BlogImage::insert($blogImages);
     }
 }
