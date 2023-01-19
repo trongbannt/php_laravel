@@ -7,6 +7,7 @@ use Illuminate\Pagination\Paginator;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -30,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if(env('APP_ENV') == 'production') {
+            URL::forceScheme('https');
+        }
         //Laravel includes pagination views built using
         Paginator::useBootstrapFive();
 
